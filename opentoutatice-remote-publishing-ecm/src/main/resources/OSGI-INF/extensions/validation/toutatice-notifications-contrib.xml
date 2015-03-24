@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.validation.notifications">
+
+	<require>org.nuxeo.ecm.platform.notification.service.NotificationContrib</require>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="notifications">
+
+		<notification name="Toutatice review task assigned"
+			channel="email" enabled="true" availableIn="Workspace,PortalSite"
+			autoSubscribed="true" template="reviewWorkflow"
+			subject="Demande de validation du document: ${docTitle}" label="label.nuxeo.notifications.workflow">
+			<event name="workflowReviewTaskAssigned" />
+		</notification>
+
+		<notification name="Toutatice review task canceled"
+			channel="email" enabled="true" availableIn="Workspace,PortalSite"
+			autoSubscribed="true" template="reviewWorkflow"
+			subject="Annulation de la demande de validation de: ${docTitle}"
+			label="label.nuxeo.notifications.workflow">
+			<event name="workflowReviewTaskCanceled" />
+		</notification>
+
+		<notification name="Toutatice review task rejected"
+			channel="email" enabled="true" availableIn="Workspace,PortalSite"
+			autoSubscribed="true" template="reviewWorkflow"
+			subject="Rejet de la demande de validation de: ${docTitle}" label="label.nuxeo.notifications.appReviewStarted">
+			<event name="workflowReviewTaskRejected" />
+		</notification>
+
+		<notification name="Toutatice review task approved"
+			channel="email" enabled="true" availableIn="Workspace,PortalSite"
+			autoSubscribed="true" template="reviewWorkflow" subject="Validation du document: ${docTitle}"
+			label="label.nuxeo.notifications.appReviewStarted">
+			<event name="workflowReviewTaskApproved" />
+		</notification>
+
+	</extension>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="templates">
+
+		<template name="reviewWorkflow" src="templates/reviewWorkflow_fr.ftl" />
+
+	</extension>
+
+</component>

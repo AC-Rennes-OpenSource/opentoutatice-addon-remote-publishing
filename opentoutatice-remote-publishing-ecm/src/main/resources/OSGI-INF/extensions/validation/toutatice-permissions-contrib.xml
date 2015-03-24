@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.plateform.validation.permissions">
+
+	<require>org.nuxeo.ecm.core.security.SecurityService</require>
+	<require>org.nuxeo.ecm.core.security.defaultPermissions</require>
+
+	<extension point="permissionsVisibility"
+		target="org.nuxeo.ecm.core.security.SecurityService">
+		<visibility type="Workspace">
+			<item order="1000" show="true">validationWorkflow_validation</item>
+		</visibility>
+		<visibility type="File">
+			<item order="1000" show="true">validationWorkflow_validation</item>
+		</visibility>
+		<visibility type="Folder">
+			<item order="1000" show="true">validationWorkflow_validation</item>
+		</visibility>
+		<visibility type="Note">
+			<item order="1000" show="true">validationWorkflow_validation</item>
+		</visibility>
+		<visibility type="OrderedFolder">
+			<item order="1000" show="true">validationWorkflow_validation</item>
+		</visibility>
+		<visibility type="Picture">
+			<item order="1000" show="true">validationWorkflow_validation</item>
+		</visibility>
+		<visibility type="PictureBook">
+			<item order="1000" show="true">validationWorkflow_validation</item>
+		</visibility>
+	</extension>
+
+</component>

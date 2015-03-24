@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.remote.publishing.addon.notifications">
+
+	<require>org.nuxeo.ecm.platform.notification.service.NotificationContrib</require>
+	<require>fr.toutatice.ecm.platform.remote.publishing.notifications</require>
+
+	<extension target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="notifications">
+		
+		<!-- Désactivation Notification par défaut -->
+		<notification name="Publication" channel="email" 
+			enabled="false"
+			availableIn="Section" 
+			autoSubscribed="true" 
+			template="publish"
+			subject="Document Publié" 
+			label="label.nuxeo.notifications.publication">
+			<event name="documentPublicationApproved" />
+			<event name="documentPublicationRejected" />
+			<event name="documentPublished" />
+		</notification>
+		
+		<!-- Notification Custom -->
+		<!-- Abonnement -->
+		<notification name="ToutaticePublication" channel="email" 
+			enabled="true"
+			availableIn="Section,PortalSite" 
+			autoSubscribed="false" 
+			template="remote_publishing"
+			subject="Document Publié" 
+			label="label.nuxeo.notifications.publish">
+			<event name="documentPublicationApproved" />
+			<event name="documentPublicationRejected" />
+			<event name="documentPublished" />
+		</notification>
+		
+		<notification name="Remote publication task assigned" 
+			channel="email" 
+			enabled="true"
+			availableIn="Section,PortalSite" 
+			autoSubscribed="true" 
+			template="remote_publishing"
+			subject="Demande de publication du document: ${docTitle}" 
+			label="label.nuxeo.notifications.publication">
+			<event name="documentWaitingPublication" />
+		</notification>
+		
+		<notification name="Remote publication rejected" 
+			channel="email" 
+			enabled="true" 
+			availableIn="Section,PortalSite" 
+			autoSubscribed="true" 
+			template="remote_publishing"
+			subject="Rejet de la demande de publication de: ${docTitle}" 
+			label="label.nuxeo.notifications.publication">
+			<event name="documentPublicationRejected" />
+		</notification>
+		
+		<notification name="Remote publication approved" 
+			channel="email"
+			enabled="true" 
+			availableIn="Section,PortalSite" 
+			autoSubscribed="true" 
+			template="remote_publishing" 
+			subject="Document publié: ${docTitle}" 
+			label="label.nuxeo.notifications.publication">
+			<event name="documentPublicationApproved" />
+			<event name="documentPublished" />
+		</notification>
+		
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="templates">
+		
+		<template name="remote_publishing" src="templates/publishing_fr.ftl" />
+	
+	</extension>
+
+</component>

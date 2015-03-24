@@ -1,0 +1,233 @@
+<div xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:nxd="http://nuxeo.org/nxweb/document"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:rich="http://richfaces.org/rich" class="menu">
+
+	<a4j:outputPanel ajaxRendered="true">
+		<h:form ajaxSubmit="true" id="publishTreeForm">
+			<h:panelGroup rendered="#{!empty defaultPublishingRoots}">
+
+				<!-- Mantis #2792 : actions d'administration des sections, héritage et propagation -->
+				<div class="action_bar">
+					<a4j:commandLink action="#{adminPublishActions.applySectionsHeritage()}"
+						id="ADMIN_PUBLICATION_TREES_ACTIONS_SECTIONS_HERITAGE"
+						immediate="true"
+						rendered="#{userSession.administrator or currentNuxeoPrincipal.isMemberOf('Administrators')}"
+						render="sectionTree sectionList facesStatusMessagePanel">
+						<h:outputText value="#{messages['toutatice.label.admin.publication.sections.heritage']}" />
+					</a4j:commandLink>
+
+					<a4j:commandLink action="#{adminPublishActions.propagateSections()}"
+						id="ADMIN_PUBLICATION_TREES_ACTIONS_SECTIONS_PROPAGATE"
+						rendered="#{userSession.administrator or currentNuxeoPrincipal.isMemberOf('Administrators')}"
+						render="facesStatusMessagePanel"
+						immediate="true">
+						<h:outputText value="#{messages['toutatice.label.admin.publication.sections.propagate']}" />
+					</a4j:commandLink>
+				</div>
+
+				<h:panelGrid class="dataInput"
+					style="clear:both"
+					columnClasses="labelColumn, fieldColumn" 
+					columns="2">
+					<h:panelGroup>
+						<h3>
+							<h:outputText value="#{messages['label.publish.sections']}" />
+						</h3>
+					</h:panelGroup>
+					<h:panelGroup>
+						<h:selectOneListbox class="dataInputText" size="1"
+							value="#{adminPublishActions.currentSectionRootId}">
+							<nxu:selectItems value="#{defaultPublishingRoots}" var="root"
+								itemValue="#{root.id}"
+								itemLabel="#{adminPublishActions.getFormattedPath(root)}" />
+							<a4j:ajax event="change" render="sectionTree sectionList"
+								ignoreDupResponses="true" />
+						</h:selectOneListbox>
+					</h:panelGroup>
+				</h:panelGrid>
+
+				<dl>
+					<dd class="menuForm">
+						<h:panelGroup id="sectionTree">
+							<rich:tree
+								icon="#{nodeState.isExpanded(rowKey)?nxd:iconExpandedPath(node.document):nxd:iconPath(node.document)}"
+								iconLeaf="#{nxd:iconPath(node.document)}"
+								iconExpanded="/icons/toggle_minus.png"
+								iconCollapsed="/icons/toggle_plus.png"
+								adviseNodeOpened="#{adminPublishActions.getTrue()}"
+								rowKeyVar="rowKey" 
+								stateVar="nodeState"
+								var="node">
+								<rich:treeModelRecursiveAdaptor
+									roots="#{adminPublishActions.currentSectionsTree}"
+									nodes="#{node.children}" >
+									<rich:treeNode highlightedClass="treeNodeHighlightedClass"
+										selectedClass="treeNodeSelectedClass">
+										<h:outputText value="#{nxd:titleOrId(node.document)}" />
+										<nxu:methodResult name="canAddSection"
+											value="#{adminPublishActions.canAddSection(node.document)}">
+											<a4j:commandLink immediate="true" rendered="#{canAddSection}"
+												action="#{adminPublishActions.addSection(node.document.id)}"
+												render="sectionList">
+												<h:graphicImage value="/icons/back.png" />
+												<h:outputText
+													value="#{messages['label.publish.add.section']}" />
+											</a4j:commandLink>
+										</nxu:methodResult>
+									</rich:treeNode>
+								</rich:treeModelRecursiveAdaptor>
+							</rich:tree>
+						</h:panelGroup>
+					</dd>
+				</dl>
+			</h:panelGroup>
+
+			<a4j:outputPanel id="sectionList">
+				<h:panelGroup rendered="#{!empty adminPublishActions.getSelectedSections('LOCAL')}">
+
+					<h3>
+						<h:outputText value="#{messages['toutatice.label.publish.sections.local']}" />
+					</h3>
+
+					<nxu:dataTable value="#{adminPublishActions.getSelectedSections('LOCAL')}"
+						var="section" 
+						preserveSort="true" 
+						preserveDataModel="false"
+						rowClasses="dataRowEven,dataRowOdd" 
+						sortable="false"
+						styleClass="dataList">
+
+						<!-- Remove -->
+						<nxu:column styleClass="iconColumn">
+							<a4j:commandLink immediate="true"
+								action="#{adminPublishActions.removeSection(section.id)}"
+								render="sectionList" ignoreDupResponses="true">
+								<h:graphicImage value="/icons/delete_red.png" />
+							</a4j:commandLink>
+						</nxu:column>
+
+						<!-- Domaine -->
+						<nxu:column>
+							<f:facet name="header">
+								<h:outputText value="#{messages['toutatice.label.section.list.header.domain']}" />
+							</f:facet>
+							<nxu:methodResult name="domain" value="#{navigationContext.getDocumentDomain(section)}">
+								<nxd:restDocumentLink document="#{domain}">
+									<h:outputText value="#{domain.title}" />
+								</nxd:restDocumentLink>
+							</nxu:methodResult>
+						</nxu:column>
+
+						<!-- Espace de publication -->
+						<nxu:column>
+							<f:facet name="header">
+								<h:outputText value="#{messages['toutatice.label.section.list.header.publicationSpace']}" />
+							</f:facet>
+							<nxu:methodResult name="publicationArea" value="#{navigationContext.getSectionPublicationArea(section)}">
+								<nxd:restDocumentLink document="#{publicationArea}">
+									<h:outputText value="#{publicationArea.title}" />
+								</nxd:restDocumentLink>
+							</nxu:methodResult>
+						</nxu:column>
+						
+						<!-- Section (suffixe) -->
+						<nxu:column>
+							<f:facet name="header">
+								<h:outputText value="#{messages['toutatice.label.section.list.header.suffix']}" />
+							</f:facet>
+							<nxu:methodResult name="pathSuffix" value="#{adminPublishActions.getRelativePath(section)}">
+								<nxd:restDocumentLink document="#{section}">
+									<h:outputText value="#{pathSuffix}" />
+								</nxd:restDocumentLink>
+							</nxu:methodResult>
+						</nxu:column>						
+					</nxu:dataTable>
+
+				</h:panelGroup>
+			</a4j:outputPanel>
+
+			<a4j:outputPanel id="heritedSectionList">
+				<h:panelGroup rendered="#{empty adminPublishActions.getSelectedSections('LOCAL') and !empty adminPublishActions.getSelectedSections('HERITED')}">
+
+					<h3>
+						<h:outputText value="#{messages['toutatice.label.publish.sections.herited']}" />
+						<nxu:methodResult name="parent" value="#{adminPublishActions.getParentCfgOwner(section)}">
+							<nxd:restDocumentLink document="#{parent}" 
+								tab="TAB_MANAGE"
+								subTab="TAB_ADMIN_PUBLICATION_TREES">
+								<h:outputText value=" #{parent.title}" />
+							</nxd:restDocumentLink>
+						</nxu:methodResult>
+					</h3>
+					
+					<nxu:dataTable value="#{adminPublishActions.getSelectedSections('HERITED')}"
+						var="section" 
+						preserveSort="true" 
+						preserveDataModel="false"
+						rowClasses="dataRowEven,dataRowOdd" 
+						sortable="false"
+						styleClass="dataList">
+
+						<!-- Remove action is disabled (herited elements must be removed from the folder that configures them) -->
+						<nxu:column styleClass="iconColumn">
+							<h:graphicImage value="/icons/delete_red.png" />
+						</nxu:column>
+
+						<!-- Domaine -->
+						<nxu:column>
+							<f:facet name="header">
+								<h:outputText value="#{messages['toutatice.label.section.list.header.domain']}" />
+							</f:facet>
+							<nxu:methodResult name="domain" value="#{navigationContext.getDocumentDomain(section)}">
+								<nxd:restDocumentLink document="#{domain}">
+									<h:outputText value="#{domain.title}" />
+								</nxd:restDocumentLink>
+							</nxu:methodResult>
+						</nxu:column>
+
+						<!-- Espace de publication -->
+						<nxu:column>
+							<f:facet name="header">
+								<h:outputText value="#{messages['toutatice.label.section.list.header.publicationSpace']}" />
+							</f:facet>
+							<nxu:methodResult name="publicationArea" value="#{navigationContext.getSectionPublicationArea(section)}">
+								<nxd:restDocumentLink document="#{publicationArea}">
+									<h:outputText value="#{publicationArea.title}" />
+								</nxd:restDocumentLink>
+							</nxu:methodResult>
+						</nxu:column>
+						
+						<!-- Section (suffixe) -->
+						<nxu:column>
+							<f:facet name="header">
+								<h:outputText value="#{messages['toutatice.label.section.list.header.suffix']}" />
+							</f:facet>
+							<nxu:methodResult name="pathSuffix" value="#{adminPublishActions.getRelativePath(section)}">
+								<nxd:restDocumentLink document="#{section}">
+									<h:outputText value="#{pathSuffix}" />
+								</nxd:restDocumentLink>
+							</nxu:methodResult>
+						</nxu:column>
+					</nxu:dataTable>
+
+				</h:panelGroup>
+
+				<h:panelGroup rendered="#{empty adminPublishActions.selectedSections}">
+
+					<h3>
+						<h:outputText value="#{messages['label.publish.selected.sections.empty']}" />
+					</h3>
+
+				</h:panelGroup>
+
+			</a4j:outputPanel>
+
+
+		</h:form>
+	</a4j:outputPanel>
+</div>

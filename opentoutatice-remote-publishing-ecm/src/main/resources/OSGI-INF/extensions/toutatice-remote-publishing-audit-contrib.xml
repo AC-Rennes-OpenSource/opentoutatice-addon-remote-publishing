@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.remote.publishing.addon.audit">
+
+	<require>org.nuxeo.ecm.platform.audit.service.NXAuditEventsService</require>
+	
+	<extension target="org.nuxeo.ecm.platform.audit.service.NXAuditEventsService" point="event">
+	
+		<event name="UnpublishSelectionCompleted"/>
+	
+	</extension>
+
+</component>

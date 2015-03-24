@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: Publication distante Toutatice 
+Bundle-SymbolicName: fr.toutatice.ecm.platform.remote.publishing;singleton:=true
+Bundle-Localization: plugin
+Bundle-Category: stateful
+Nuxeo-Component: OSGI-INF/extensions/toutatice-publisher-task-contrib.xml,
+ OSGI-INF/extensions/toutatice-operations-contrib.xml,
+ OSGI-INF/extensions/toutatice-eventlistener-contrib.xml,
+ OSGI-INF/extensions/toutatice-notifications-contrib.xml,
+ OSGI-INF/extensions/toutatice-publisher-finder-contrib.xml,
+ OSGI-INF/extensions/toutatice-remote-publishing-audit-contrib.xml,
+ OSGI-INF/extensions/validation/toutatice-actions-contrib.xml,
+ OSGI-INF/extensions/validation/toutatice-filters-contrib.xml,
+ OSGI-INF/extensions/validation/toutatice-notifications-contrib.xml,
+ OSGI-INF/extensions/validation/toutatice-chains-contrib.xml,
+ OSGI-INF/extensions/validation/toutatice-routing-service-contrib.xml,
+ OSGI-INF/extensions/validation/toutatice-core-types-contrib.xml,
+ OSGI-INF/extensions/validation/toutatice-schemas-contrib.xml,
+ OSGI-INF/extensions/validation/toutatice-permissions-contrib.xml,
+ OSGI-INF/extensions/validation/toutatice-widgets-contrib.xml
+ 

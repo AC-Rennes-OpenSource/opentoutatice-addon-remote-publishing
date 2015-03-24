@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.remote.publishing.eventlistener">
+
+	<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
+		point="listener">
+
+		<listener name="toutaticeSetPublicationSections" async="true" postCommit="false"
+			class="fr.toutatice.ecm.platform.listener.ToutaticeSetPublicationSections"
+			priority="122">
+			<event>documentCreated</event>
+		</listener>
+		
+		<listener name="toutaticePropagateSectionsAsynchronously" async="true" postCommit="true"
+			class="fr.toutatice.ecm.platform.listener.ToutaticePropagateSectionsAsynchronouslyListener"
+			priority="130">
+			<event>propagateSections</event>
+		</listener>
+		
+	</extension>
+
+</component>
+
+

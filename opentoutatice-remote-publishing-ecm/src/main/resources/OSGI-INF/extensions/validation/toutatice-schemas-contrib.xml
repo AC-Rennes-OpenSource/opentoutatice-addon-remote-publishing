@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.validation.schemas">
+
+	<require>org.nuxeo.ecm.core.schema.TypeService</require>
+
+	<extension target="org.nuxeo.ecm.core.schema.TypeService"
+		point="schema">
+
+		<schema name="var_Task8d3" prefix="var_Task8d3"
+			src="schemas/var_Task8d3.xsd" />
+		<schema name="var_Task109f" prefix="var_Task109f"
+			src="schemas/var_Task109f.xsd" />
+		<schema name="var_Task1025" prefix="var_Task1025"
+			src="schemas/var_Task1025.xsd" />
+		<schema name="var_Taskfa0" prefix="var_Taskfa0"
+			src="schemas/var_Taskfa0.xsd" />
+		<schema name="var_toutatice_validation" prefix="var_toutatice_validation"
+			src="schemas/var_toutatice_validation.xsd" />
+
+	</extension>
+
+</component>

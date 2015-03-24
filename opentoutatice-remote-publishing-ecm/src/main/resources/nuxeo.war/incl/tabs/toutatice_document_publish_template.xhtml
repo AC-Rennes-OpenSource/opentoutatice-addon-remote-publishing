@@ -1,0 +1,99 @@
+<f:subview xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"	
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:nxd="http://nuxeo.org/nxweb/document"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:rich="http://richfaces.org/rich" >
+
+	<link rel="stylesheet" type="text/css" href="${baseURL}css/toutatice_default_template.css" />
+
+	<div class="menu">
+
+		<c:choose>
+			<c:when test="#{empty adminPublishActions.selectedSections}" >
+				<div class="publishInfoMessage">
+					<h:outputText value="#{messages['toutatice.label.publish.no.authorized.section']}" />
+				</div>
+			</c:when>
+			<c:otherwise>
+				<a4j:outputPanel ajaxRendered="true">
+					<h:form ajaxSubmit="true" id="publishTreeForm">
+						<c:choose>
+							<c:when test="#{not empty adminPublishActions.selectedSections}" >
+								<div class="toutatice_remote_publication">
+									<a4j:outputPanel id="sectionList">
+			
+										<h1><h:outputText value="#{messages['toutatice.tree.title']}" /></h1>
+			
+										<nxu:dataTable value="#{adminPublishActions.selectedSections}"
+											var="section" 
+											preserveSort="true" 
+											preserveDataModel="false"
+											rowClasses="dataRowEven,dataRowOdd" 
+											sortable="false"
+											styleClass="dataList">
+			
+											<!-- Espace de publication -->
+											<nxu:column>
+												<f:facet name="header">
+													<h:outputText value="#{messages['toutatice.label.publish.to.header.area']}" />
+												</f:facet>
+												<h:outputText value="#{documentActions.getPublicationAreaNameOfSection(section)}" />
+											</nxu:column>
+									
+											<!-- Nom de la section -->
+											<nxu:column>
+												<f:facet name="header">
+													<h:outputText value="#{messages['toutatice.label.publish.to.header.section']}" />
+												</f:facet>
+												<nxd:restDocumentLink document="#{section}">
+													<h:outputText value="#{section.getTitle()}" />
+												</nxd:restDocumentLink>
+											</nxu:column>
+												
+											<!-- Version publiée du document -->
+											<nxu:column>
+												<f:facet name="header">
+													<h:outputText value="#{messages['toutatice.label.publish.header.version']}" />
+												</f:facet>
+												<h:outputText value="#{publishActions.getPublishedVersion(section)}" />
+												<a4j:commandLink id="unpublishCommandLink"
+													immediate="true"
+													action="#{publishActions.unPublishFrom(section)}"
+													rendered="#{publishActions.canUnpublishFrom(section)}"
+													render="sectionList facesStatusMessagePanel" >
+													<h:outputText value=" (#{messages['command.document.unpublish']})" />
+												</a4j:commandLink>
+											</nxu:column>
+									
+											<!--  Version publiable du document -->
+											<nxu:column>
+												<f:facet name="header">
+													<h:outputText value="#{messages['toutatice.label.publishable.header.version']}" />
+												</f:facet>
+												<h:outputText value="#{publishActions.getPublishableVersion(section)}" />
+												<a4j:commandLink id="publishCommandLink" 
+													immediate="true"
+													action="#{publishActions.doPublish(section)}"
+													rendered="#{publishActions.canPublishTo(section)}"
+													render="sectionList facesStatusMessagePanel" >
+													<h:outputText value=" (#{messages['toutatice.label.publish.publish']})" />
+												</a4j:commandLink>
+
+											</nxu:column>
+										</nxu:dataTable>
+								
+									</a4j:outputPanel>
+								</div>
+							</c:when>
+						</c:choose>
+					</h:form>
+				</a4j:outputPanel>
+			</c:otherwise>
+		</c:choose>
+
+	</div>
+</f:subview>

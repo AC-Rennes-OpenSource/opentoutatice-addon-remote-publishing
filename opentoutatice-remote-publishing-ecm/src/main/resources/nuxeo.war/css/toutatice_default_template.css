@@ -1,0 +1,73 @@
+.toutatice_class_label {
+	font-weight:bold;
+}
+
+.toutatice_class_icon {
+	margin-left:10px;
+}
+
+.toutatice_remote_publication {
+	margin-top:20px;	
+}
+
+.toutatice_remote_publication_title {
+}
+
+.toutatice_local_publication {	
+	margin-top:20px;
+}
+
+.toutatice_local_publication_title {
+	font-weight: bold;
+	font-size: 10px;
+}
+
+.toutatice_tableCellClass {
+	border-style:solid;
+	border-width:1px;
+	border-color:grey;
+	padding:5px 5px 5px 5px;
+	vertical-align:top;
+}
+
+.toutatice_tableCellHeaderClass {
+	background-color:#B0C4DE;
+}
+
+.toutatice_tableTitleClass {
+	padding:0; 
+	color:#2F4F4F;
+	font-size:12px;
+	font-weight:bold;
+}
+
+.toutatice_tableHeaderTitleClass {
+	padding:0; 
+	color:#2F4F4F;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.toutatice_icon_cafe {
+	width:30px;
+}
+
+.toutatice_icon_the {
+	width:30px;
+}
+
+.toutatice_icon_eau50 {
+	width:40px;
+}
+
+.toutatice_icon_eau150 {
+	width:30px;
+}
+
+.toutatice_icon_verre {
+	width:30px;
+}
+
+.toutatice_complex_item_column {
+	vertical-align:middle;
+}

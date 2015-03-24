@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<component name="toutatice.ecm.plateform.validation.automation.chains">
+
+	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+		point="chains">
+
+		<chain id="validation">
+			<operation id="Fetch.DocumentInList" >
+				<param type="integer" name="index">0</param>
+			</operation> 
+			<operation id="Document.SetLifeCycle">
+				<param type="string" name="value">approve</param>
+			</operation>
+			<operation id="Document.CreateVersion">
+				<param type="string" name="increment">Minor</param>
+			</operation>
+			<operation id="Audit.Log">
+				<param type="string" name="event">Document validé (hors demande)
+				</param>
+				<param type="string" name="category">Automation</param>
+			</operation>
+			<operation id="Notification.SendSeamEvent">
+				<param type="string" name="name">workflowTaskCompleted</param>
+			</operation>
+			<operation id="Notification.SendSeamEvent">
+				<param type="string" name="name">documentChanged</param>
+			</operation>
+			<operation id="Seam.AddInfoMessage">
+				<param type="string" name="message">Le document est validé</param>
+			</operation>
+		</chain>
+
+	</extension>
+
+</component>

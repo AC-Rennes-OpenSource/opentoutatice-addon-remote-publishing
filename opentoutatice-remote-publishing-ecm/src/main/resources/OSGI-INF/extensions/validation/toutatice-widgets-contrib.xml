@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.validation.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+	<require>org.nuxeo.ecm.platform.forms.layouts.webapp.summary</require>
+	<require>fr.toutatice.ecm.platform.web.local.publishing.widgets</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+		
+		<!-- Sucharge pour ne pas apparaître pour la validation -->
+		<widget name="summary_current_document_single_tasks" type="summary_current_document_single_tasks">
+			<widgetModes>
+				<mode value="view">#{nxu:test((routingActions.isValidationWorkflowRunning() == false)
+				      and (routingActions.isOnLineWorkflowRunning() == false)
+				      and (taskActions.hasNuxeoPublishTaskPending() == false), layout.mode, 'hidden')}</mode>
+			</widgetModes>
+		</widget>
+		
+		<widget name="toutatice_validate_task_widget" type="custom_validate_task_actions">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields>
+				<field>#{taskActions.getValidateTask()}</field>
+				<field>#{taskActions.getValidateTaskName()}</field>
+			</fields>
+			<properties widgetMode="any">
+				<property name="display">buttons</property>
+			</properties>
+			<controls mode="any">
+				<control name="requireSurroundingForm">true</control>
+			</controls>
+			<widgetModes>
+				<mode value="view">#{nxu:test(taskActions.isValidateTask(taskActions.getValidateTask())
+					== true, layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+
+	</extension>
+
+</component>

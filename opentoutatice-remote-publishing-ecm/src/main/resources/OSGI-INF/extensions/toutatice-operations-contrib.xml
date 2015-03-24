@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.remote.publishing.automation.operations" version="1.0">
+
+  <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+    point="operations">
+
+	<operation class="fr.toutatice.ecm.platform.operation.RemotePublishDocument"/>
+	
+  </extension>
+
+</component>

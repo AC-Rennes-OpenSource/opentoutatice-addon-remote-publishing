@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.publisher.finder">
+
+	<require>org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl</require>
+	<require>fr.toutatice.ecm.platform.remote.publishing.publisher.finder</require>
+
+	<extension target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
+		point="rootSectionFinderFactory">
+
+		<rootSectionFinderFactory class="fr.toutatice.ecm.platform.web.publication.finder.ToutaticeRemoteRootSectionsFinderFactory" />
+
+	</extension>
+
+</component> 
