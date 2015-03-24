@@ -62,7 +62,7 @@ public class ToutaticeRPTaskActionsBean extends ToutaticeTaskActionsBean {
 
     public Task getValidateTask() throws ClientException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
-        return ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeRPConstants.CST_WORKFLOW_TASK_VALIDATION_VALIDATE, documentManager, currentDocument);
+        return ToutaticeWorkflowHelper.getTaskByName(ToutaticeRPConstants.CST_WORKFLOW_TASK_VALIDATION_VALIDATE, documentManager, currentDocument);
     }
     
     public boolean isValidateTask(Task task) throws ClientException {
