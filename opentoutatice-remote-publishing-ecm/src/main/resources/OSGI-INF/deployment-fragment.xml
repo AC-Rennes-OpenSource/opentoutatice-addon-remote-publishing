@@ -2,7 +2,8 @@
 
 <fragment version="1">
 	
-	<require>fr.toutatice.ecm.platform.web</require> 
+	<require>org.nuxeo.ecm.platform.publisher.core</require>
+	<require>fr.toutatice.ecm.platform.web</require>
 
 	<extension target="faces-config#NAVIGATION">
 	</extension>

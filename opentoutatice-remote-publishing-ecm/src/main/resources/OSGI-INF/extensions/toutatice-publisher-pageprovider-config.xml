@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.remote.publishing.pageprovider.config">
+
+	<!--
+		Override the native component 'org.nuxeo.ecm.platform.publisher.pageprovider.contrib' that limits
+		the number of domains taken into account for to 50!?!
+		 
+		(Refer to redmine ticket #3226).
+	 -->
+	 
+	<require>org.nuxeo.ecm.platform.query.api.PageProviderService</require>
+	<require>org.nuxeo.ecm.platform.publisher.pageprovider.contrib</require>
+
+	<extension target="org.nuxeo.ecm.platform.query.api.PageProviderService"
+		point="providers">
+		
+		<coreQueryPageProvider name="domains_for_publishing">
+			<pattern>
+				SELECT * FROM Document WHERE ecm:primaryType = 'Domain' AND ecm:parentId = ? AND ecm:currentLifeCycleState != 'deleted'
+			</pattern>
+			<sort column="dc:title" ascending="true" />
+			<!--pageSize>50</pageSize-->
+		</coreQueryPageProvider>
+		
+	</extension>
+	
+</component>

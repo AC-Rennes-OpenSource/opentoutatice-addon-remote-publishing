@@ -18,5 +18,6 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-publisher-task-contrib.xml,
  OSGI-INF/extensions/validation/toutatice-core-types-contrib.xml,
  OSGI-INF/extensions/validation/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/validation/toutatice-permissions-contrib.xml,
- OSGI-INF/extensions/validation/toutatice-widgets-contrib.xml
+ OSGI-INF/extensions/validation/toutatice-widgets-contrib.xml,
+ OSGI-INF/extensions/toutatice-publisher-pageprovider-config.xml
  
