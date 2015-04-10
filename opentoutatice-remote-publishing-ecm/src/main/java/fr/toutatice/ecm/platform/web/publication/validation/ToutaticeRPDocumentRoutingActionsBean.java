@@ -24,6 +24,7 @@ import static org.jboss.seam.ScopeType.CONVERSATION;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.annotations.Install;
@@ -37,6 +38,7 @@ import org.nuxeo.ecm.platform.task.Task;
 
 import fr.toutatice.ecm.platform.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.constants.ToutaticeRPConstants;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.web.workflows.ToutaticeDocumentRoutingActionsBean;
 
 /**
@@ -91,16 +93,27 @@ public class ToutaticeRPDocumentRoutingActionsBean extends ToutaticeDocumentRout
     }
 
     @Override
-    public Task getValidateTask() throws ClientException {
+    public Task getValidateTask(String wfName) throws ClientException {
         Task validate = null;
-        List<Task> currentRouteAllTasks = getCurrentRouteAllTasks();
-        Iterator<Task> iterator = currentRouteAllTasks.iterator();
-        while (iterator.hasNext() && validate == null) {
-            Task task = iterator.next();
-            if (ToutaticeRPConstants.CST_WORKFLOW_TASK_VALIDATION_VALIDATE.equalsIgnoreCase(task.getName())) {
-                validate = task;
+
+        String taskName = StringUtils.EMPTY;
+        if (ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE.equals(wfName)) {
+            taskName = ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE;
+        } else if(ToutaticeRPConstants.CST_WORKFLOW_VALIDATION.equals(wfName)){
+            taskName = ToutaticeRPConstants.CST_WORKFLOW_TASK_VALIDATION_VALIDATE;
+        }
+
+        if (StringUtils.isNotBlank(taskName)) {
+            List<Task> currentRouteAllTasks = getCurrentRouteAllTasks();
+            Iterator<Task> iterator = currentRouteAllTasks.iterator();
+            while (iterator.hasNext() && validate == null) {
+                Task task = iterator.next();
+                if (taskName.equalsIgnoreCase(task.getName())) {
+                    validate = task;
+                }
             }
         }
+        
         return validate;
     }
 }
