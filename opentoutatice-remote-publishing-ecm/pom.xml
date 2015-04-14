@@ -13,7 +13,7 @@
 	<name>Remote publishing feature</name>
 
 	<properties>
-		<opentoutatice.platform.version>3.0.0-RC15</opentoutatice.platform.version>
+		<opentoutatice.platform.version>3.0.0-RC18</opentoutatice.platform.version>
 	</properties>
 
 	<dependencies>

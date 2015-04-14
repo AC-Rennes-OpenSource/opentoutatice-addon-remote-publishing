@@ -11,6 +11,10 @@
 	<packaging>zip</packaging>
 	<name>Marketplace package - Remote publishing feature</name>
 
+	<properties>
+		<nuxeo.cap.distribution.version>6.0</nuxeo.cap.distribution.version>
+	</properties>
+
 	<dependencyManagement>
 		<dependencies>
 		<!-- Import Nuxeo BOM -->
