@@ -36,5 +36,12 @@ public interface ToutaticeRPConstants {
 	
 	String CST_WORKFLOW_VALIDATION = "toutatice_validation";
 	String CST_WORKFLOW_TASK_VALIDATION_VALIDATE = "validate-validation";
+	
+	
+	String CST_EVENT_VALIDATION_TASK_APPROVED = "workflowReviewTaskApproved";
+	String CST_EVENT_VALIDATION_TASK_REJECTED = "workflowReviewTaskRejected";
+	
+	String CST_WORKFLOW_BUTTON_VALIDATION_ACCEPT = "workflow_validation_accept";
+	String CST_WORKFLOW_BUTTON_VALIDATION_REJECT = "workflow_validation_reject";
     
 }
