@@ -32,6 +32,16 @@
 					<goals>deploy</goals>
 			      	</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin> 
 		</plugins>			
 		<pluginManagement>
 			<plugins>
@@ -44,7 +54,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
+	
 	<scm>
 		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice-addons/opentoutatice-remote-publishing/trunk</developerConnection>
 	</scm>
