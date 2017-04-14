@@ -8,16 +8,43 @@
 	<packaging>pom</packaging>
 	<description>Addon to leverage the collaboration tools</description>
 	<name>opentoutatice-remote-publishing-parent</name>
-	<version>2.0.2-SNAPSHOT</version>
+	<version>4.6-SNAPSHOT</version>
 
 	<properties>
-		<nuxeo.version>6.0-HF09</nuxeo.version>
+		<nuxeo.version>6.0-HF34</nuxeo.version>
+		<opentoutatice.platform.version>4.6-SNAPSHOT</opentoutatice.platform.version>
+		<opentoutatice.wf.integ.version>2.1-SNAPSHOT</opentoutatice.wf.integ.version>
 	</properties>
 
 	<modules>
 	   <module>opentoutatice-remote-publishing-ecm</module>
 	   <module>opentoutatice-remote-publishing-marketplace</module>
 	</modules>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-ecm-platform-core</artifactId>
+				<version>${opentoutatice.platform.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-ecm-attached-files</artifactId>
+				<version>${opentoutatice.platform.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-ecm-platform-web</artifactId>
+				<version>${opentoutatice.platform.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>opentoutatice-ecm.workflows-integration</groupId>
+				<artifactId>opentoutatice-addon-workflows-integration-ecm</artifactId>
+				<version>${opentoutatice.wf.integ.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>

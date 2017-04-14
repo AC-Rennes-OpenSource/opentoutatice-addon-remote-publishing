@@ -39,7 +39,7 @@ import org.nuxeo.ecm.platform.task.Task;
 import fr.toutatice.ecm.platform.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.constants.ToutaticeRPConstants;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
-import fr.toutatice.ecm.platform.web.workflows.ToutaticeDocumentRoutingActionsBean;
+import fr.toutatice.ecm.workflows.integration.beans.IntegrationDocumentRoutingActionsBean;
 
 /**
  * @author David Chevrier
@@ -47,8 +47,8 @@ import fr.toutatice.ecm.platform.web.workflows.ToutaticeDocumentRoutingActionsBe
  */
 @Name("routingActions")
 @Scope(CONVERSATION)
-@Install(precedence = ExtendedSeamPrecedence.ADD_ON)
-public class ToutaticeRPDocumentRoutingActionsBean extends ToutaticeDocumentRoutingActionsBean {
+@Install(precedence = ExtendedSeamPrecedence.INHERIT_ADD_ON)
+public class ToutaticeRPDocumentRoutingActionsBean extends IntegrationDocumentRoutingActionsBean {
 
     private static final long serialVersionUID = 8176244997123301627L;
 

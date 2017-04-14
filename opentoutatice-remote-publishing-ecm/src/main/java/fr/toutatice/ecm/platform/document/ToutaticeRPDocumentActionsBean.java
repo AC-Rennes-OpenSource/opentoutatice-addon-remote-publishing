@@ -35,13 +35,13 @@ import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
+import org.opentoutatice.ecm.attached.images.bean.OttcDocumentActionsBean;
 
 import fr.toutatice.ecm.platform.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.constants.ToutaticeRPConstants;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeNotifyEventHelper;
-import fr.toutatice.ecm.platform.web.document.ToutaticeDocumentActionsBean;
 import fr.toutatice.ecm.platform.web.publication.validation.ToutaticeRemotePublishActionsBean;
 
 /**
@@ -50,8 +50,8 @@ import fr.toutatice.ecm.platform.web.publication.validation.ToutaticeRemotePubli
  */
 @Name("documentActions")
 @Scope(CONVERSATION)
-@Install(precedence = ExtendedSeamPrecedence.ADD_ON)
-public class ToutaticeRPDocumentActionsBean extends ToutaticeDocumentActionsBean {
+@Install(precedence = ExtendedSeamPrecedence.INHERIT_ADD_ON)
+public class ToutaticeRPDocumentActionsBean extends OttcDocumentActionsBean {
 
 	private static final long serialVersionUID = 8652740421940377204L;
 	

@@ -4,6 +4,7 @@
 	
 	<require>org.nuxeo.ecm.platform.publisher.core</require>
 	<require>fr.toutatice.ecm.platform.web</require>
+	<require>fr.toutatice.ecm.platform.workflows.integration</require>
 
 	<extension target="faces-config#NAVIGATION">
 	</extension>

@@ -21,7 +21,7 @@ import fr.toutatice.ecm.platform.web.workflows.ToutaticeRoutingTaskActionsBean;
 
 @Scope(CONVERSATION)
 @Name("routingTaskActions")
-@Install(precedence = ExtendedSeamPrecedence.ADD_ON)
+@Install(precedence = ExtendedSeamPrecedence.INHERIT_ADD_ON)
 public class ToutaticeRPRoutingTaskActionsBean extends ToutaticeRoutingTaskActionsBean {
 
 	private static final long serialVersionUID = 7828257388908697920L;

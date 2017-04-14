@@ -5,27 +5,29 @@
 	<parent>
 		<groupId>opentoutatice-ecm.remote-publishing</groupId>
 		<artifactId>opentoutatice-remote-publishing-parent</artifactId>
-		<version>2.0.2-SNAPSHOT</version>
+		<version>4.6-SNAPSHOT</version>
 	</parent>
 	
 	<artifactId>opentoutatice-platform-remote-publishing-ecm</artifactId>
 	<packaging>jar</packaging>
 	<name>Remote publishing feature</name>
 
-	<properties>
-		<opentoutatice.platform.version>3.0.0</opentoutatice.platform.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<version>${opentoutatice.platform.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-web</artifactId>
-			<version>${opentoutatice.platform.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-attached-files</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>opentoutatice-ecm.workflows-integration</groupId>
+		<artifactId>opentoutatice-addon-workflows-integration-ecm</artifactId>
 		</dependency>
 	</dependencies>
 	
