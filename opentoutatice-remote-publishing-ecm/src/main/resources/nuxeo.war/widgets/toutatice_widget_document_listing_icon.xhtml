@@ -9,39 +9,21 @@
 	<c:set var="document" value="#{value.data}" />
 
 	<c:if test="#{nxl:isLikePlainMode(widget.mode)}">
-		<h:outputText rendered="#{documentActions.isOnlineDocument(document)}" value="#{widget.properties.label}" />
+		<h:outputText rendered="#{documentActions.isOnlineDocument(document)}"
+			value="#{widget.properties.label}" />
 	</c:if>
 
 	<c:if test="#{nxl:isLikeViewMode(widget.mode)}">
 		<div class="AlignIcon #{widget.properties.styleClass}">
-		
-			<c:set var="isOnlineRequestRunning" value="#{routingActions.isOnLineWfPending(document)}"/>
-			<c:set var="helpLabel" value="#{nxu:test(isOnlineRequestRunning, messages['toutatice.label.pending.online'], '')}"/>
-			
-			<c:set var="isValidationRequestRunning" value="#{routingActions.isValidationWorkflowRunning(document)}"/>
-			<c:set var="helpLabel" value="#{nxu:test(isValidationRequestRunning, messages['toutatice.label.pending.validation'], helpLabel)}"/>
 
-			<c:set var="isPublishRequestRunning" value="#{publishActions.isPending(document)}"/>	
-			<c:set var="helpLabel" value="#{nxu:test(isPublishRequestRunning, messages['toutatice.label.pending.publication'], helpLabel)}"/>
-
-			<c:choose>
-				<c:when test="#{isOnlineRequestRunning or isValidationRequestRunning or isPublishRequestRunning}">
-					<nxu:graphicImage value="/icons/review_pending.gif"
-						alt="#{helpLabel}" 
-						title="#{helpLabel}"
-						styleClass="smallIcon" />
-				</c:when>
-				<c:otherwise>
-					<nxh:commandLink id="#{widget.id}"
-						action="#{documentActions.viewOnlineVersion(document)}"
-						rendered="#{!empty widget.properties.iconPath and documentActions.isOnlineDocument(document)}">
-						<nxu:graphicImage value="#{widget.properties.iconPath}"
-							alt="#{messages['toutatice.command.see.version']} #{documentActions.getProxyVersion(document)}"
-							title="#{messages['toutatice.command.see.version']} #{documentActions.getProxyVersion(document)}"
-							styleClass="smallIcon" />
-					</nxh:commandLink>
-				</c:otherwise>
-			</c:choose>
+			<nxh:commandLink id="#{widget.id}"
+				action="#{documentActions.viewOnlineVersion(document)}"
+				rendered="#{!empty widget.properties.iconPath and documentActions.isOnlineDocument(document)}">
+				<nxu:graphicImage value="#{widget.properties.iconPath}"
+					alt="#{messages['toutatice.command.see.version']} #{documentActions.getProxyVersion(document)}"
+					title="#{messages['toutatice.command.see.version']} #{documentActions.getProxyVersion(document)}"
+					styleClass="smallIcon" />
+			</nxh:commandLink>
 
 		</div>
 	</c:if>
