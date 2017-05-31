@@ -25,10 +25,6 @@
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-attached-files</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>opentoutatice-ecm.workflows-integration</groupId>
-		<artifactId>opentoutatice-addon-workflows-integration-ecm</artifactId>
-		</dependency>
 	</dependencies>
 	
 	<build>
