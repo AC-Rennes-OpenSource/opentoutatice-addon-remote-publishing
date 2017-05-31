@@ -11,9 +11,10 @@
 	<version>4.6-SNAPSHOT</version>
 
 	<properties>
-		<nuxeo.version>6.0-HF34</nuxeo.version>
+		<nuxeo.version>6.0-HF37</nuxeo.version>
+		<nuxeo.cap.version>6.0</nuxeo.cap.version>
 		<opentoutatice.platform.version>4.6-SNAPSHOT</opentoutatice.platform.version>
-		<opentoutatice.wf.integ.version>2.1-SNAPSHOT</opentoutatice.wf.integ.version>
+		<opentoutatice.wf.integ.version>4.6-SNAPSHOT</opentoutatice.wf.integ.version>
 	</properties>
 
 	<modules>
@@ -23,6 +24,14 @@
 	
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.nuxeo.ecm.distribution</groupId>
+				<artifactId>nuxeo-distribution-cap</artifactId>
+				<version>${nuxeo.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			
 			<dependency>
 				<groupId>opentoutatice-ecm.platform</groupId>
 				<artifactId>opentoutatice-ecm-platform-core</artifactId>
