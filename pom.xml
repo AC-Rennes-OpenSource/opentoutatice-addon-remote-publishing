@@ -39,7 +39,7 @@
 			</dependency>
 			<dependency>
 				<groupId>opentoutatice-ecm.platform</groupId>
-				<artifactId>opentoutatice-ecm-attached-files</artifactId>
+				<artifactId>opentoutatice-ecm-platform-attached-files</artifactId>
 				<version>${opentoutatice.platform.version}</version>
 			</dependency>
 			<dependency>
