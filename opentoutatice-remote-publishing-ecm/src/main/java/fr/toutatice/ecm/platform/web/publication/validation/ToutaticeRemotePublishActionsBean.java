@@ -136,7 +136,10 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
 		} catch (ClientException e) {
 			DocumentModel currentDocument = navigationContext.getCurrentDocument();
 			String docName = (null != currentDocument) ? currentDocument.getName() : "<unknown>";
-			log.debug("Failed to evaluate the condition 'isPublicationAvailable', for the document '" + docName + "', error: " + e.getMessage());
+
+            if (log.isDebugEnabled()) {
+                log.debug("Failed to evaluate the condition 'isPublicationAvailable', for the document '" + docName + "', error: " + e.getMessage());
+            }
 		}
 
 		return status;
@@ -144,6 +147,10 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
 
 	public boolean canPublishTo(DocumentModel section) throws ClientException {
 		boolean status = false;
+
+        if (log.isDebugEnabled() && section != null) {
+            log.debug("ToutaticeRemotePublishActionsBean.canPublishTo | " + section.getPathAsString());
+        }
 
 		try {
 			DocumentModel publishableDoc = getPublishableDoc();
