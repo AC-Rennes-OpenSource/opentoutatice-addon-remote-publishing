@@ -62,10 +62,6 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
         List<DocumentRef> filtredDocRef = new ArrayList<DocumentRef>();
         List<DocumentRef> trashedDocRef = new ArrayList<DocumentRef>();
 
-        if (log.isDebugEnabled()) {
-            log.debug("ToutaticeRemoteRootSectionsFinder.getFiltredSectionRoots | " + StringUtils.join(rootPaths, ','));
-        }
-
         for (String rootPath : rootPaths) {
             try {
                 DocumentRef rootRef = new PathRef(rootPath);
@@ -100,10 +96,10 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
              * Si le parent possède une configuration vide, il faut poursuivre la recherche d'un parent (jusqu'à l'élément root).
              */
             unrestrictedSectionRootParentCfgOwner = getPublishingParent(session, currentDocument);
+            unrestrictedSectionRootFromWorkspaceConfig = new ArrayList<String>();
 
             if (unrestrictedSectionRootParentCfgOwner != null) {
                 DocumentModelList sectionRootsFromWorkspaceConfig = getSectionRootsFromWorkspaceConfig(unrestrictedSectionRootParentCfgOwner, session);
-                unrestrictedSectionRootFromWorkspaceConfig = new ArrayList<String>();
                 for (DocumentModel root : sectionRootsFromWorkspaceConfig) {
                     unrestrictedSectionRootFromWorkspaceConfig.add(root.getPathAsString());
                 }
@@ -114,10 +110,6 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
             unrestrictedDefaultSectionRoot = Collections.emptyList();
         }
 
-        if (log.isDebugEnabled() && unrestrictedSectionRootFromWorkspaceConfig != null) {
-            log.debug("#computeUnrestrictedRoots | unrestrictedSectionRootFromWorkspaceConfig: "
-                    + StringUtils.join(unrestrictedSectionRootFromWorkspaceConfig, ", "));
-        }
     }
 
     protected void computeUnrestrictedLocalRoots(CoreSession session) throws ClientException {
@@ -145,25 +137,15 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
     public DocumentModelList getSectionRootsForWorkspace(DocumentModel currentDoc, boolean addDefaultSectionRoots, ROOT_SECTION_TYPE sectionListType)
             throws ClientException {
         if ((currentDocument == null) || (!currentDocument.getRef().equals(currentDoc.getRef()))) {
-
-            if (log.isDebugEnabled()) {
-                log.debug("ToutaticeRemoteRootSectionsFinder.getSectionRootsForWorkspace | computeUserSectionRoots | " + currentDoc.getPathAsString());
-            }
             computeUserSectionRoots(currentDoc);
         }
 
-        if (unrestrictedDefaultSectionRoot.isEmpty() && addDefaultSectionRoots) {
-            if (unrestrictedDefaultSectionRoot == null || unrestrictedDefaultSectionRoot.isEmpty()) {
-                DocumentModelList defaultSectionRoots = getDefaultSectionRoots(session);
-                unrestrictedDefaultSectionRoot = new ArrayList<String>();
+        if (unrestrictedDefaultSectionRoot == null || unrestrictedDefaultSectionRoot.isEmpty()) {
+            DocumentModelList defaultSectionRoots = getDefaultSectionRoots(session);
+            unrestrictedDefaultSectionRoot = new ArrayList<String>();
 
-                if (log.isDebugEnabled()) {
-                    log.debug("ToutaticeRemoteRootSectionsFinder.getSectionRootsForWorkspace | getDefaultSectionRoots(session) | " + defaultSectionRoots.size());
-                }
-
-                for (DocumentModel root : defaultSectionRoots) {
-                    unrestrictedDefaultSectionRoot.add(root.getPathAsString());
-                }
+            for (DocumentModel root : defaultSectionRoots) {
+                unrestrictedDefaultSectionRoot.add(root.getPathAsString());
             }
         }
 
@@ -173,11 +155,6 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
         }
         if (ROOT_SECTION_TYPE.ALL.equals(sectionListType) || ROOT_SECTION_TYPE.LOCAL.equals(sectionListType)) {
             agregatedList.addAll(unrestrictedSectionRootFromLocalConfig);
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("ToutaticeRemoteRootSectionsFinder.getSectionRootsForWorkspace | getFiltredSectionRoots(agregatedList) | "
-                + StringUtils.join(agregatedList, ','));
         }
 
         return getFiltredSectionRoots(agregatedList, true);
@@ -220,10 +197,6 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
         // Found
         if (!ToutaticeNuxeoStudioConst.CST_DOC_TYPE_ROOT.equals(parentDocument.getType())) {
             publishingParent = parentDocument;
-        }
-
-        if (log.isDebugEnabled() && document != null) {
-            log.debug("#getPublishingParent: " + document.getPathAsString());
         }
 
         return publishingParent;

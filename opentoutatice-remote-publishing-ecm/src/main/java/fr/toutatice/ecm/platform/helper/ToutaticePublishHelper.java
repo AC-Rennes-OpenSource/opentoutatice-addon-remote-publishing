@@ -41,34 +41,33 @@ public class ToutaticePublishHelper {
 
 	private static final Log log = LogFactory.getLog(ToutaticePublishHelper.class);
 
-	public static PublicationTree getCurrentPublicationTreeForPublishing(DocumentModel doc, PublisherService ps, CoreSession session)
-			throws ClientException {
-		PublicationTree currentPublicationTree = null;
-		if (log.isDebugEnabled()) {
-			log.debug(" ----> getCurrentPublicationTreeForPublishing ");
-		}
-		
-		String currentPublicationTreeNameForPublishing = null;
+    public static PublicationTree getCurrentPublicationTreeForPublishing(DocumentModel doc, PublisherService ps, CoreSession session) throws ClientException {
+        PublicationTree currentPublicationTree = null;
+        if (log.isDebugEnabled()) {
+            log.debug(" ----> getCurrentPublicationTreeForPublishing ");
+        }
 
-		List<String> publicationTrees = new ArrayList<String>(ps.getAvailablePublicationTree());
+        String currentPublicationTreeNameForPublishing = null;
 
-		publicationTrees = filterEmptyTrees(publicationTrees, doc, ps, session);
-		if (!publicationTrees.isEmpty()) {
-			currentPublicationTreeNameForPublishing = publicationTrees.get(0);
-		}
+        List<String> publicationTrees = new ArrayList<String>(ps.getAvailablePublicationTree());
 
-		if (currentPublicationTreeNameForPublishing != null) {
-			try {
-				currentPublicationTree = ps.getPublicationTree(currentPublicationTreeNameForPublishing, session, null, doc);
-			} catch (PublicationTreeNotAvailable e) {
-				currentPublicationTree = null;
-			}
-		}
-		if (log.isDebugEnabled()) {
-			log.debug(" <---- getCurrentPublicationTreeForPublishing : " + currentPublicationTree.getName());
-		}
-		return currentPublicationTree;
-	}
+        publicationTrees = filterEmptyTrees(publicationTrees, doc, ps, session);
+        if (!publicationTrees.isEmpty()) {
+            currentPublicationTreeNameForPublishing = publicationTrees.get(0);
+        }
+
+        if (currentPublicationTreeNameForPublishing != null) {
+            try {
+                currentPublicationTree = ps.getPublicationTree(currentPublicationTreeNameForPublishing, session, null, doc);
+            } catch (PublicationTreeNotAvailable e) {
+                currentPublicationTree = null;
+            }
+        }
+        if (log.isDebugEnabled()) {
+            log.debug(" <---- getCurrentPublicationTreeForPublishing : " + currentPublicationTree.getName());
+        }
+        return currentPublicationTree;
+    }
 
 	public static DocumentModel getFirstSection(DocumentModel doc, PublisherService ps, CoreSession session) throws ClientException {
 
@@ -90,25 +89,25 @@ public class ToutaticePublishHelper {
 		return target;
 	}
 
-	public static List<String> filterEmptyTrees(Collection<String> trees, DocumentModel doc, PublisherService ps, CoreSession session)
-			throws PublicationTreeNotAvailable, ClientException {
-		List<String> filteredTrees = new ArrayList<String>();
+    public static List<String> filterEmptyTrees(Collection<String> trees, DocumentModel doc, PublisherService ps, CoreSession session)
+            throws PublicationTreeNotAvailable, ClientException {
+        List<String> filteredTrees = new ArrayList<String>();
 
-		for (String tree : trees) {
+        for (String tree : trees) {
 
-			PublicationTree pTree = ps.getPublicationTree(tree, session, null, doc);
-			if (pTree != null) {
-				if (pTree.getTreeType().equals("RootSectionsPublicationTree")) {
-					if (pTree.getChildrenNodes().size() > 0) {
-						filteredTrees.add(tree);
-					}
-				} else {
-					filteredTrees.add(tree);
-				}
-			}
-		}
-		return filteredTrees;
-	}
+            PublicationTree pTree = ps.getPublicationTree(tree, session, null, doc);
+            if (pTree != null) {
+                if (pTree.getTreeType().equals("ToutaticeRootSectionsPublicationTree")) {
+                    if (pTree.getChildrenNodes().size() > 0) {
+                        filteredTrees.add(tree);
+                    }
+                } else {
+                    filteredTrees.add(tree);
+                }
+            }
+        }
+        return filteredTrees;
+    }
 
 	public static DocumentModelList getSelectedSections(String type, NavigationContext navigationContext, RootSectionFinder rsf) {
 		DocumentModelList list = new DocumentModelListImpl();
