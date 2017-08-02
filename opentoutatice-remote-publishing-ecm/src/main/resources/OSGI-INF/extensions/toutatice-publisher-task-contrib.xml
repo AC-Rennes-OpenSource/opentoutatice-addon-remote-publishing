@@ -4,19 +4,8 @@
 
 	<require>org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl</require>
 	<require>org.nuxeo.ecm.platform.publisher.task.contrib</require>
-
-	<!-- Utilisé pour l'arbre de publication d'une feuille basé sur l'arbre 
-		de configuration des sections d'un Workspace -->
-		
-	<extension target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
-		point="factory">
-
-		<publishedDocumentFactory name="ToutaticeRPCoreProxyWithWorkflow"
-			class="fr.toutatice.ecm.platform.web.publication.validation.ToutaticeRPCoreProxyWithWorkflowFactory"
-			validatorsRule="CoreValidatorsRule" />
-
-	</extension>
-
+	<require>org.nuxeo.ecm.platform.publisher.contrib</require>
+	
 	<extension
 		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
 		point="tree">
@@ -26,12 +15,24 @@
 
 	</extension>
 
+	<!-- Utilisé pour l'arbre de publication d'une feuille basé sur l'arbre 
+		de configuration des sections d'un Workspace -->
+		
+	<extension target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
+		point="factory">
+
+		<publishedDocumentFactory name="acRennesRPCoreProxyWithWorkflow"
+			class="fr.toutatice.ecm.acrennes.publishing.AcrennesPublishedDocumentWithWorkflowFactory"
+			validatorsRule="CoreValidatorsRule" />
+
+	</extension>
+
 	<extension
 		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
 		point="treeInstance">
 
 		<publicationTreeConfig name="DefaultSectionsTree"
-			tree="RootSectionsCoreTree" factory="ToutaticeRPCoreProxyWithWorkflow"
+			tree="RootSectionsCoreTree" factory="acRennesRPCoreProxyWithWorkflow"
 			localSectionTree="true" title="Sections de publication locales">
 			<parameters>
 				<parameter name="RelativeRootPath">/</parameter>

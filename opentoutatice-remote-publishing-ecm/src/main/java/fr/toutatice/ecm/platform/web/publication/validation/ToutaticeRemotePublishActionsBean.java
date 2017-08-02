@@ -100,6 +100,16 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
     private transient Map<String, Boolean> mapIsPublishedDoc = null;
     private transient Map<String, List<PublishedDocument>> publishedDocsOfTreeMap = null;
 
+    /**
+     * To be coherent with new model without modify publication_widget_template.xhtml.
+     * Question is just: are we on remote proxy?
+     */
+    @Override
+    public boolean isPublishedDocument() {
+        DocumentModel currentDoc = this.navigationContext.getCurrentDocument();
+        return currentDoc.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY);
+    }
+
     public boolean isRemoteProxyInSelection() {
         boolean status = false;
 

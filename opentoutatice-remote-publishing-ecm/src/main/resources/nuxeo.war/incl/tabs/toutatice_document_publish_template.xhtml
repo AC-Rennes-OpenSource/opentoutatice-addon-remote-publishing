@@ -11,25 +11,23 @@
 	<link rel="stylesheet" type="text/css" href="${baseURL}css/toutatice_default_template.css" />
 
 	<div class="menu">
+	
+		<c:set var="userSectionsByMaster" value="#{sectionsManager.getSections()}" /> 
+		<c:set var="publishableDocument" value="#{userSectionsByMaster.getPublishableDoc()}" /> 
 
-		<c:choose>
-			<c:when test="#{empty adminPublishActions.selectedSections}" >
 				<div class="publishInfoMessage">
-					<h:outputText value="#{messages['toutatice.label.publish.no.authorized.section']}" />
+					<h:outputText value="#{messages['toutatice.label.publish.no.authorized.section']}" rendered="#{userSectionsByMaster.size() == 0}"/>
 				</div>
-			</c:when>
-			<c:otherwise>
-				<a4j:outputPanel ajaxRendered="true">
+
+				<a4j:outputPanel ajaxRendered="true" rendered="#{userSectionsByMaster.size() > 0}">
 					<h:form ajaxSubmit="true" id="publishTreeForm">
-						<c:choose>
-							<c:when test="#{not empty adminPublishActions.selectedSections}" >
 								<div class="toutatice_remote_publication">
 									<a4j:outputPanel id="sectionList">
 			
 										<h1><h:outputText value="#{messages['toutatice.tree.title']}" /></h1>
 			
-										<nxu:dataTable value="#{adminPublishActions.selectedSections}"
-											var="section" 
+										<nxu:dataTable value="#{userSectionsByMaster}"
+											var="userSectionByMaster" 
 											preserveSort="true" 
 											preserveDataModel="false"
 											rowClasses="dataRowEven,dataRowOdd" 
@@ -41,16 +39,18 @@
 												<f:facet name="header">
 													<h:outputText value="#{messages['toutatice.label.publish.to.header.area']}" />
 												</f:facet>
-												<h:outputText value="#{documentActions.getPublicationAreaNameOfSection(section)}" />
+												<h:outputText value="#{userSectionByMaster.getSpace().getTitle()}" />
 											</nxu:column>
+											
+											<ui:param name="userSection" value="#{userSectionByMaster.getUserRootSection()}" /> 
 									
 											<!-- Nom de la section -->
 											<nxu:column>
 												<f:facet name="header">
 													<h:outputText value="#{messages['toutatice.label.publish.to.header.section']}" />
 												</f:facet>
-												<nxd:restDocumentLink document="#{section}">
-													<h:outputText value="#{section.getTitle()}" />
+												<nxd:restDocumentLink document="#{userSection.section}">
+													<h:outputText value="#{userSection.section.getTitle()}" />
 												</nxd:restDocumentLink>
 											</nxu:column>
 												
@@ -59,11 +59,11 @@
 												<f:facet name="header">
 													<h:outputText value="#{messages['toutatice.label.publish.header.version']}" />
 												</f:facet>
-												<h:outputText value="#{publishActions.getPublishedVersion(section)}" />
+												<h:outputText value="#{userSection.publishedDoc.getSourceVersionLabel()}" />
 												<a4j:commandLink id="unpublishCommandLink"
 													immediate="true"
-													action="#{publishActions.unPublishFrom(section)}"
-													rendered="#{publishActions.canUnpublishFrom(section)}"
+													action="#{acrennesPublishingActions.unPublish(userSection.publishedDoc)}"
+													rendered="#{userSection.canUnPublishFrom()}"
 													render="sectionList facesStatusMessagePanel" >
 													<h:outputText value=" (#{messages['command.document.unpublish']})" />
 												</a4j:commandLink>
@@ -74,11 +74,14 @@
 												<f:facet name="header">
 													<h:outputText value="#{messages['toutatice.label.publishable.header.version']}" />
 												</f:facet>
-												<h:outputText value="#{publishActions.getPublishableVersion(section)}" />
+												
+												<h:outputText value="#{publishableDocument.getVersionLabel()}" rendered="#{not publishableDocument.hasError(userSection.section)}"/> 
+												<h:outputText value="#{messages[publishableDocument.getError(userSection.section).getMessageKey()]}" rendered="#{publishableDocument.hasError(userSection.section)}"/>
+												
 												<a4j:commandLink id="publishCommandLink" 
 													immediate="true"
-													action="#{publishActions.doPublish(section)}"
-													rendered="#{publishActions.canPublishTo(section)}"
+													action="#{acrennesPublishingActions.publish(publishableDocument.getModel(), userSection.getSection())}"
+													rendered="#{userSection.canPublishTo()}"
 													render="sectionList facesStatusMessagePanel" >
 													<h:outputText value=" (#{messages['toutatice.label.publish.publish']})" />
 												</a4j:commandLink>
@@ -88,12 +91,8 @@
 								
 									</a4j:outputPanel>
 								</div>
-							</c:when>
-						</c:choose>
 					</h:form>
 				</a4j:outputPanel>
-			</c:otherwise>
-		</c:choose>
 
 	</div>
 </f:subview>
