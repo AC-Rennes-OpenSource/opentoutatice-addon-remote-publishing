@@ -19,7 +19,6 @@
 package fr.toutatice.ecm.platform.operation;
 
 import java.util.Date;
-import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -37,13 +36,13 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
-import org.nuxeo.ecm.platform.publisher.api.PublicationNode;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
 import org.nuxeo.ecm.platform.publisher.api.PublisherService;
 import org.nuxeo.ecm.platform.publisher.impl.core.SimpleCorePublishedDocument;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.acrennes.publishing.AcrennesPublishedDocumentWithWorkflowFactory;
 import fr.toutatice.ecm.platform.constants.ToutaticeRPConstants;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
@@ -129,16 +128,15 @@ public class RemotePublishDocument {
 				}
 			}
 			
-			/* publier */
-			PublicationNode publicationNodeTarget = ps.wrapToPublicationNode(target, session);
-			publishedDocument = tree.publish(doc, publicationNodeTarget, new HashMap<String, String>());
+            // Publish
+            publishedDocument = AcrennesPublishedDocumentWithWorkflowFactory.getInstance().publish(session, doc, target);
 			
 
 		} else {
 			throw new ClientException("Failed to get the target document reference");
 		}
 		log.debug("debut de publication ");
-		InnerSilentPublish runner = new InnerSilentPublish(session, doc, publishedDocument, target, formerProxyName);
+        InnerSilentPublish runner = new InnerSilentPublish(session, doc, publishedDocument, target);
 		runner.silentRun(true);
 		DocumentModel proxy = runner.getProxy();
 		log.debug("fin de publication ");
@@ -150,7 +148,6 @@ public class RemotePublishDocument {
 		private DocumentModel doc;
 		private DocumentModel newProxy;
 		private DocumentModel target;
-		private String formerProxyName;
 
 		private PublishedDocument publishedDocument;
 
@@ -158,12 +155,11 @@ public class RemotePublishDocument {
 			return this.newProxy;
 		}
 
-		public InnerSilentPublish(CoreSession session, DocumentModel doc, PublishedDocument publishedDocument, DocumentModel target, String formerProxyName) {
+        public InnerSilentPublish(CoreSession session, DocumentModel doc, PublishedDocument publishedDocument, DocumentModel target) {
 			super(session);
 			this.doc = doc;
 			this.target = target;
 			this.publishedDocument = publishedDocument;
-			this.formerProxyName = formerProxyName;
 		}
 
 		@Override

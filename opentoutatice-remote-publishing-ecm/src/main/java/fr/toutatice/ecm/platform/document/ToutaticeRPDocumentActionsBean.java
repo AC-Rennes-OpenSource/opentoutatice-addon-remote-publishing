@@ -42,6 +42,7 @@ import fr.toutatice.ecm.platform.constants.ToutaticeRPConstants;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeNotifyEventHelper;
+import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 import fr.toutatice.ecm.platform.web.publication.validation.ToutaticeRemotePublishActionsBean;
 
 /**
@@ -139,4 +140,43 @@ public class ToutaticeRPDocumentActionsBean extends OttcDocumentActionsBean {
         }
     }
     
+    /**
+     * @return le nom de l'espace de publication dans le portail pour la section
+     */
+    public String getPublicationAreaNameOfSection(DocumentModel section) {
+        String areaName = getPublicationAreaName(section);
+
+        if (CST_DEFAULT_PUBLICATON_AREA_TITLE.equals(areaName)) {
+            /*
+             * La section n'appartient pas à un espace de publication mais à un élément
+             * de type SectionRoot. Prendre son nom.
+             */
+            DocumentModel sectionRoot = ((ToutaticeNavigationContext) navigationContext).getSectionPublicationArea(section);
+            if (sectionRoot != null) {
+                try {
+                    areaName = sectionRoot.getTitle();
+                } catch (ClientException e) {
+                    log.error("Failed to get the domain title, error: " + e.getMessage());
+                    areaName = CST_DEFAULT_PUBLICATON_AREA_TITLE;
+                }
+            } else {
+                /*
+                 * La section n'appartient pas à un espace de publication ni à une SectionRoot. Prendre
+                 * le nom du domaine à la place
+                 */
+                DocumentModel domain = ((ToutaticeNavigationContext) navigationContext).getDocumentDomain(section);
+                if (domain != null) {
+                    try {
+                        areaName = domain.getTitle();
+                    } catch (ClientException e) {
+                        log.error("Failed to get the domain title, error: " + e.getMessage());
+                        areaName = CST_DEFAULT_PUBLICATON_AREA_TITLE;
+                    }
+                }
+            }
+        }
+
+        return areaName;
+    }
+
 }
