@@ -5,7 +5,7 @@
 	<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
 		point="listener">
 
-		<listener name="toutaticeSetPublicationSections" async="true" postCommit="false"
+		<listener name="toutaticeSetPublicationSections" async="false" postCommit="false"
 			class="fr.toutatice.ecm.platform.listener.ToutaticeSetPublicationSections"
 			priority="122">
 			<event>documentCreated</event>

@@ -34,6 +34,10 @@ public class UserRootSectionsFinder extends UnrestrictedSessionRunner {
     protected static final String CONFIGURED_ROOT_SECTIONS_QUERY = "select * from Document where ecm:uuid %s and ecm:isVersion = 0 and ecm:currentLifeCycleState <> 'deleted'"
             + " and ecm:mixinType = 'Folderish' and ecm:mixinType <> 'HiddenInNavigation'";
 
+    /** Query to get children of document. */
+    protected static final String CHILDREN_QUERY = "select * from Document where ecm:uuid %s and ecm:isVersion = 0 and ecm:currentLifeCycleState <> 'deleted'"
+            + " and ecm:mixinType = 'Folderish' and ecm:mixinType <> 'HiddenInNavigation'";
+
     /** Current document. */
     private DocumentModel currentDoc;
 
@@ -211,5 +215,25 @@ public class UserRootSectionsFinder extends UnrestrictedSessionRunner {
         return masterRoot;
     }
 
+    /**
+     * Invalidate all cache of sections by document.
+     */
+    public static void invalidateAllSectionsCache() {
+        sectionsByDocCache = new ConcurrentHashMap<>();
+    }
+
+    /**
+     * Invalidate cache entries for all children of given configured folder.
+     */
+    public static void invalidateSectionsCache(DocumentModel ws) {
+        // Get all children
+        DocumentModelList descendants = ToutaticeEsQueryHelper.getDescendants(ws.getCoreSession(), ws, true, false);
+
+        // Invalidate
+        for (DocumentModel descendant : descendants) {
+            sectionsByDocCache.remove(descendant.getId());
+        }
+
+    }
 
 }

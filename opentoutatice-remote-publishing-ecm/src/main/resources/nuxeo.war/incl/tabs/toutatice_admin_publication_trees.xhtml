@@ -59,7 +59,7 @@
 								iconLeaf="#{nxd:iconPath(node.document)}"
 								iconExpanded="/icons/toggle_minus.png"
 								iconCollapsed="/icons/toggle_plus.png"
-								adviseNodeOpened="#{adminPublishActions.getTrue()}"
+								adviseNodeOpened="true"
 								rowKeyVar="rowKey" 
 								stateVar="nodeState"
 								var="node">
@@ -175,7 +175,7 @@
 
 						<!-- Remove action is disabled (herited elements must be removed from the folder that configures them) -->
 						<nxu:column styleClass="iconColumn">
-							<h:graphicImage value="/icons/delete_red.png" />
+							<h:graphicImage value="/icons/delete.png" />
 						</nxu:column>
 
 						<!-- Domaine -->
