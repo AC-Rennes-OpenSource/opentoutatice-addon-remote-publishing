@@ -1,6 +1,5 @@
 package fr.toutatice.ecm.acrennes.builder;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -85,7 +84,7 @@ public class UserRootSectionsFinder extends UnrestrictedSessionRunner {
     public DocumentModelList getConfiguredUserRootSections(CoreSession userSession, DocumentModel document) {
         // Logs
         final long b = System.currentTimeMillis();
-        
+
         // Check cache
         DocumentModelList sections = sectionsByDocCache.get(document.getId());
 
@@ -93,21 +92,24 @@ public class UserRootSectionsFinder extends UnrestrictedSessionRunner {
             // Get configured Root sections ids on one of document's publishing parent
             List<String> rootSectionsIds = getUserRootSectionsIds(userSession, document);
 
-            if (log.isDebugEnabled()) {
-                final long e = System.currentTimeMillis();
-                log.debug("#getConfiguredUserRootSections: after rootSectionsIds: " + String.valueOf(e - b) + " ms");
-            }
+            if (CollectionUtils.isNotEmpty(rootSectionsIds)) {
 
-            // Get documents (implicitly filtered on Read permission)
-            String query = String.format(CONFIGURED_ROOT_SECTIONS_QUERY, NxqlHelper.buildInClause(rootSectionsIds));
-            sections = ToutaticeEsQueryHelper.unretrictedQuery(userSession, query, rootSectionsIds.size());
+                if (log.isDebugEnabled()) {
+                    final long e = System.currentTimeMillis();
+                    log.debug("#getConfiguredUserRootSections: after rootSectionsIds: " + String.valueOf(e - b) + " ms");
+                }
 
-            // Set in cache
-            sectionsByDocCache.put(document.getId(), sections);
+                // Get documents (implicitly filtered on Read permission)
+                String query = String.format(CONFIGURED_ROOT_SECTIONS_QUERY, NxqlHelper.buildInClause(rootSectionsIds));
+                sections = ToutaticeEsQueryHelper.unretrictedQuery(userSession, query, rootSectionsIds.size());
 
-            if (log.isDebugEnabled()) {
-                final long e = System.currentTimeMillis();
-                log.debug("#getConfiguredUserRootSections: end: " + String.valueOf(e - b) + " ms");
+                // Set in cache
+                sectionsByDocCache.put(document.getId(), sections);
+
+                if (log.isDebugEnabled()) {
+                    final long e = System.currentTimeMillis();
+                    log.debug("#getConfiguredUserRootSections: end: " + String.valueOf(e - b) + " ms");
+                }
             }
         } else {
             if (log.isDebugEnabled()) {
@@ -142,8 +144,6 @@ public class UserRootSectionsFinder extends UnrestrictedSessionRunner {
 
         if (publishingFolder != null) {
             this.sectionsIds = Arrays.asList((String[]) publishingFolder.getPropertyValue(AbstractRootSectionsFinder.SECTIONS_PROPERTY_NAME));
-        } else {
-            this.sectionsIds = new ArrayList<>(0);
         }
     }
 
