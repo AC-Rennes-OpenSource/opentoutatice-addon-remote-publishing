@@ -1,5 +1,6 @@
 package fr.toutatice.ecm.acrennes.builder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -139,7 +140,11 @@ public class UserRootSectionsFinder extends UnrestrictedSessionRunner {
         // Get list of ids of configured Root sections
         DocumentModel publishingFolder = getPublishingFolder(this.session, this.currentDoc);
 
-        this.sectionsIds = Arrays.asList((String[]) publishingFolder.getPropertyValue(AbstractRootSectionsFinder.SECTIONS_PROPERTY_NAME));
+        if (publishingFolder != null) {
+            this.sectionsIds = Arrays.asList((String[]) publishingFolder.getPropertyValue(AbstractRootSectionsFinder.SECTIONS_PROPERTY_NAME));
+        } else {
+            this.sectionsIds = new ArrayList<>(0);
+        }
     }
 
     /**
@@ -150,6 +155,9 @@ public class UserRootSectionsFinder extends UnrestrictedSessionRunner {
     protected DocumentModel getPublishingFolder(CoreSession userSession, DocumentModel document) {
         // Log
         final long b = System.currentTimeMillis();
+
+        // Result
+        DocumentModel publishingFolder = null;
 
         Filter hasSectionsFilter = new Filter() {
 
@@ -162,7 +170,11 @@ public class UserRootSectionsFinder extends UnrestrictedSessionRunner {
             }
         };
 
-        DocumentModel publishingFolder = ToutaticeDocumentHelper.getParentList(userSession, document, hasSectionsFilter, true, true, true).get(0);
+        DocumentModelList publishingFolders = ToutaticeDocumentHelper.getParentList(userSession, document, hasSectionsFilter, true, true, true);
+
+        if (publishingFolders.size() > 0) {
+            publishingFolder = publishingFolders.get(0);
+        }
 
         if (log.isDebugEnabled()) {
             final long e = System.currentTimeMillis();
