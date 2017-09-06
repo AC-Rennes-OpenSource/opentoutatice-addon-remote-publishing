@@ -32,11 +32,9 @@ import org.nuxeo.ecm.automation.core.collectors.DocumentModelCollector;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
-import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
 import org.nuxeo.ecm.platform.publisher.api.PublisherService;
 import org.nuxeo.ecm.platform.publisher.impl.core.SimpleCorePublishedDocument;
@@ -67,7 +65,6 @@ public class RemotePublishDocument {
 	public DocumentModel run(DocumentModel doc) throws Exception {
 
 		DocumentModel target = null;
-		String formerProxyName = null;
 		PublishedDocument publishedDocument =null;
 		PublisherService ps = Framework.getLocalService(PublisherService.class);
 
@@ -77,7 +74,8 @@ public class RemotePublishDocument {
 		DocumentRef targetRef = target.getRef();
 		DocumentRef baseDocRef = doc.getRef();
 
-	
+        DocumentModel proxy = null;
+
 		 /* 
 		  * gestion du cycle de vie du document à publier validation du document
 		  * automatique la transition est passé en paramêtre
@@ -114,36 +112,33 @@ public class RemotePublishDocument {
 		if (null != targetRef) {
 			/* conservation d'URL: récupérer le nom courant du proxy */
 			
+            log.debug("debut de publication ");
+
 			if (doc.isVersion()) {
 				String sourceDocId = doc.getSourceId();
 				baseDocRef = new IdRef(sourceDocId);
 			}
-			PublicationTree tree = ToutaticePublishHelper.getCurrentPublicationTreeForPublishing(doc,ps,this.session);
-
-			DocumentModelList proxies = this.session.getProxies(baseDocRef, targetRef);
-			for (DocumentModel proxy : proxies) {
-				PublishedDocument pd = tree.wrapToPublishedDocument(proxy);
-				if (!pd.isPending()) {
-					formerProxyName = proxy.getName();
-				}
-			}
 			
             // Publish
             publishedDocument = AcrennesPublishedDocumentWithWorkflowFactory.getInstance().publish(session, doc, target);
+
+            SilentRenameProxy runner = new SilentRenameProxy(session, doc, publishedDocument, target);
+            runner.silentRun(true);
+
+            proxy = runner.getProxy();
+
+            log.debug("fin de publication ");
 			
 
 		} else {
 			throw new ClientException("Failed to get the target document reference");
 		}
-		log.debug("debut de publication ");
-        InnerSilentPublish runner = new InnerSilentPublish(session, doc, publishedDocument, target);
-		runner.silentRun(true);
-		DocumentModel proxy = runner.getProxy();
-		log.debug("fin de publication ");
+
+
 		return proxy;
 	}
 
-	private class InnerSilentPublish extends ToutaticeSilentProcessRunnerHelper {
+	private class SilentRenameProxy extends ToutaticeSilentProcessRunnerHelper {
 
 		private DocumentModel doc;
 		private DocumentModel newProxy;
@@ -155,7 +150,7 @@ public class RemotePublishDocument {
 			return this.newProxy;
 		}
 
-        public InnerSilentPublish(CoreSession session, DocumentModel doc, PublishedDocument publishedDocument, DocumentModel target) {
+        public SilentRenameProxy(CoreSession session, DocumentModel doc, PublishedDocument publishedDocument, DocumentModel target) {
 			super(session);
 			this.doc = doc;
 			this.target = target;

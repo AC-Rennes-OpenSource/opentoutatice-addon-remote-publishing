@@ -57,9 +57,10 @@ public class AcrennesPublishedDocumentWithWorkflowFactory extends ToutaticeCoreP
      * @return
      * @throws ClientException
      */
-    public DocumentModel publishDocument(CoreSession session, DocumentModel docToPublish, DocumentModel section) throws ClientException {
+    public PublishedDocument publish(CoreSession session, DocumentModel docToPublish, DocumentModel section) throws ClientException {
         // Result
         DocumentModel publishedDocument = null;
+        PublishedDocument publishedDoc = null;
 
         if (docToPublish.isProxy()) {
             // Store comments
@@ -67,8 +68,8 @@ public class AcrennesPublishedDocumentWithWorkflowFactory extends ToutaticeCoreP
             comments.putAll(ToutaticeCommentsHelper.getProxyComments(docToPublish));
 
             // Publish
-            PublishedDocument publishedD = publish(session, docToPublish, section);
-            publishedDocument = ((SimpleCorePublishedDocument) publishedD).getProxy();
+            publishedDoc = publishDoc(session, docToPublish, section);
+            publishedDocument = ((SimpleCorePublishedDocument) publishedDoc).getProxy();
 
             // Mark as remote proxy
             if (!publishedDocument.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY)) {
@@ -83,8 +84,8 @@ public class AcrennesPublishedDocumentWithWorkflowFactory extends ToutaticeCoreP
 
         } else {
             // Publish
-            PublishedDocument publishedD = publish(session, docToPublish, section);
-            publishedDocument = ((SimpleCorePublishedDocument) publishedD).getProxy();
+            publishedDoc = publishDoc(session, docToPublish, section);
+            publishedDocument = ((SimpleCorePublishedDocument) publishedDoc).getProxy();
 
             // Mark as remote proxy
             if (!publishedDocument.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY)) {
@@ -96,7 +97,7 @@ public class AcrennesPublishedDocumentWithWorkflowFactory extends ToutaticeCoreP
 
         }
 
-        return publishedDocument;
+        return publishedDoc;
     }
 
     /**
@@ -106,7 +107,7 @@ public class AcrennesPublishedDocumentWithWorkflowFactory extends ToutaticeCoreP
      * @param section
      * @return
      */
-    public PublishedDocument publish(CoreSession session, DocumentModel docToPublish, DocumentModel section) {
+    public PublishedDocument publishDoc(CoreSession session, DocumentModel docToPublish, DocumentModel section) {
 
         super.coreSession = session;
 
@@ -114,10 +115,12 @@ public class AcrennesPublishedDocumentWithWorkflowFactory extends ToutaticeCoreP
 
         DocumentPublisherUnrestricted runner = new DocumentPublisherUnrestricted(session, docToPublish.getRef(), section.getRef(), principal, null);
         runner.runUnrestricted();
-
+        
+        PublishedDocument publishedDocument = runner.getPublishedDocument();
+        
         session.save();
 
-        return runner.getPublishedDocument();
+        return publishedDocument;
     }
 
     /**
