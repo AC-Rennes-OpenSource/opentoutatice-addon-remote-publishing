@@ -107,7 +107,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
     @Override
     public boolean isPublishedDocument() {
         DocumentModel currentDoc = this.navigationContext.getCurrentDocument();
-        return currentDoc.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY);
+        return !currentDoc.isVersion() && currentDoc.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY);
     }
 
     public boolean isRemoteProxyInSelection() {
