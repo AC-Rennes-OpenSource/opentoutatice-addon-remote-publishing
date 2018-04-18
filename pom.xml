@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -8,37 +9,33 @@
 	<packaging>pom</packaging>
 	<description>Addon to leverage the collaboration tools</description>
 	<name>opentoutatice-remote-publishing-parent</name>
-	<version>4.6</version>
+	<version>4.8-SNAPSHOT</version>
 
 	<properties>
-		<nuxeo.version>6.0-HF42</nuxeo.version>
-		<nuxeo.cap.version>6.0</nuxeo.cap.version>
-		<opentoutatice.platform.version>4.6</opentoutatice.platform.version>
+		<nuxeo.version>8.10-HF28</nuxeo.version>
+		<nuxeo.distribution.version>8.10</nuxeo.distribution.version>
+		<opentoutatice.platform.version>4.8-SNAPSHOT</opentoutatice.platform.version>
 	</properties>
 
 	<modules>
-	   <module>opentoutatice-remote-publishing-ecm</module>
-	   <module>opentoutatice-remote-publishing-marketplace</module>
+		<module>opentoutatice-remote-publishing-ecm</module>
+		<!-- <module>opentoutatice-remote-publishing-marketplace</module> -->
 	</modules>
-	
+
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.nuxeo.ecm.distribution</groupId>
-				<artifactId>nuxeo-distribution-cap</artifactId>
-				<version>${nuxeo.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			
+			<!-- <dependency> <groupId>org.nuxeo.ecm.distribution</groupId> <artifactId>nuxeo-nxr-distribution</artifactId> 
+				<version>${nuxeo.distribution.version}</version> <type>pom</type> <scope>import</scope> 
+				</dependency> -->
+
 			<dependency>
 				<groupId>opentoutatice-ecm.platform</groupId>
 				<artifactId>opentoutatice-ecm-platform-core</artifactId>
 				<version>${opentoutatice.platform.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>opentoutatice-ecm.platform</groupId>
-				<artifactId>opentoutatice-ecm-platform-attached-files</artifactId>
+					<groupId>opentoutatice.ui</groupId>
+				<artifactId>opentoutatice-jsf-tinymce</artifactId>
 				<version>${opentoutatice.platform.version}</version>
 			</dependency>
 			<dependency>
@@ -50,43 +47,55 @@
 	</dependencyManagement>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.2.1</version>
-			 	<configuration>
-					<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice-addons/opentoutatice-remote-publishing/tags</tagBase>
-					<releaseProfiles>unpack,pack</releaseProfiles>
-					<preparationGoals>clean install</preparationGoals>
-					<goals>deploy</goals>
-			      	</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin> 
-		</plugins>			
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.3</version>
+					<configuration>
+						<archive>
+							<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+							<manifestEntries>
+								<Bundle-Version>${eclipseVersion}-t${buildNumber}</Bundle-Version>
+								<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+							</manifestEntries>
+						</archive>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>org.nuxeo.build</groupId>
 					<artifactId>ant-assembly-maven-plugin</artifactId>
 					<version>2.0.1</version>
 					<extensions>true</extensions>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.2.1</version>
+					<configuration>
+						<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice-addons/opentoutatice-remote-publishing/tags</tagBase>
+						<releaseProfiles>unpack,pack</releaseProfiles>
+						<preparationGoals>clean install</preparationGoals>
+						<goals>deploy</goals>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
-	
+
 	<scm>
-		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice-addons/opentoutatice-remote-publishing/tags/4.6</developerConnection>
+		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice-addons/opentoutatice-remote-publishing/branches/4.8-maintenance</developerConnection>
 	</scm>
 
 	<distributionManagement>

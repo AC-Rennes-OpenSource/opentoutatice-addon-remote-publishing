@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -41,7 +41,7 @@ public class ToutaticePublishHelper {
 
 	private static final Log log = LogFactory.getLog(ToutaticePublishHelper.class);
 
-    public static PublicationTree getCurrentPublicationTreeForPublishing(DocumentModel doc, PublisherService ps, CoreSession session) throws ClientException {
+    public static PublicationTree getCurrentPublicationTreeForPublishing(DocumentModel doc, PublisherService ps, CoreSession session) throws NuxeoException {
         PublicationTree currentPublicationTree = null;
         if (log.isDebugEnabled()) {
             log.debug(" ----> getCurrentPublicationTreeForPublishing ");
@@ -69,7 +69,7 @@ public class ToutaticePublishHelper {
         return currentPublicationTree;
     }
 
-	public static DocumentModel getFirstSection(DocumentModel doc, PublisherService ps, CoreSession session) throws ClientException {
+	public static DocumentModel getFirstSection(DocumentModel doc, PublisherService ps, CoreSession session) throws NuxeoException {
 
 		ToutaticeRemoteRootSectionsFinder rootFinder = (ToutaticeRemoteRootSectionsFinder) ps.getRootSectionFinder(session);
 		DocumentModel target = null;
@@ -84,13 +84,13 @@ public class ToutaticePublishHelper {
 				log.debug(" -> premier espace de publication définit " + target.getName());
 			}
 		} else {
-			throw new ClientException("Aucun espace de publication n'est défini pour ce document ");
+			throw new NuxeoException("Aucun espace de publication n'est défini pour ce document ");
 		}
 		return target;
 	}
 
     public static List<String> filterEmptyTrees(Collection<String> trees, DocumentModel doc, PublisherService ps, CoreSession session)
-            throws PublicationTreeNotAvailable, ClientException {
+            throws PublicationTreeNotAvailable, NuxeoException {
         List<String> filteredTrees = new ArrayList<String>();
 
         for (String tree : trees) {

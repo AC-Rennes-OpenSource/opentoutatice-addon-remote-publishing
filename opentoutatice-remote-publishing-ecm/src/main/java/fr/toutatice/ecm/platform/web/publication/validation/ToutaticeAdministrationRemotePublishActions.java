@@ -33,7 +33,7 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.Filter;
@@ -86,7 +86,7 @@ public class ToutaticeAdministrationRemotePublishActions extends ToutaticeAdmini
      * when a section is added.
      */
     @Override
-    public String addSection(String sectionId) throws ClientException {
+    public String addSection(String sectionId) throws NuxeoException {
         String res = super.addSection(sectionId);
         resetUserRootSectionsModel();
         return res;
@@ -97,7 +97,7 @@ public class ToutaticeAdministrationRemotePublishActions extends ToutaticeAdmini
      * when a section is removed.
      */
     @Override
-    public String removeSection(String sectionId) throws ClientException {
+    public String removeSection(String sectionId) throws NuxeoException {
         String res = super.removeSection(sectionId);
         resetUserRootSectionsModel();
         return res;
@@ -134,7 +134,7 @@ public class ToutaticeAdministrationRemotePublishActions extends ToutaticeAdmini
      * sections filles).
      */
     @Override
-    public boolean canAddSection(DocumentModel section) throws ClientException {
+    public boolean canAddSection(DocumentModel section) throws NuxeoException {
         boolean status = false;
         if (section != null) {
             if (!section.hasFacet(FacetNames.MASTER_PUBLISH_SPACE)) {
@@ -312,7 +312,7 @@ public class ToutaticeAdministrationRemotePublishActions extends ToutaticeAdmini
                 facesMessages
                         .add(StatusMessage.Severity.WARN, resourcesAccessor.getMessages().get("toutatice.info.admin.publication.sections.propagate.empty"));
             }
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             log.error("Failed to launch the process to propagate the sections, error: " + e.getMessage());
         }
     }

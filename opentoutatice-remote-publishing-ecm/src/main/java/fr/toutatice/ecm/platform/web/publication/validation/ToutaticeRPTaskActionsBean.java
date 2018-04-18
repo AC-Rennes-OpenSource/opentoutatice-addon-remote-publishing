@@ -24,7 +24,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.publisher.task.CoreProxyWithWorkflowFactory;
 import org.nuxeo.ecm.platform.task.Task;
@@ -46,7 +46,7 @@ public class ToutaticeRPTaskActionsBean extends ToutaticeTaskActionsBean {
 
     private static final long serialVersionUID = 3730629195809387779L;
     
-    public boolean isCoreProxyWorkflowPending() throws ClientException{
+    public boolean isCoreProxyWorkflowPending() throws NuxeoException{
         List<Task> currentDocumentTasks = super.getCurrentDocumentTasks();
         for(Task task : currentDocumentTasks){
            if(CoreProxyWithWorkflowFactory.PUBLISH_TASK_TYPE.equals(task.getType())){
@@ -60,19 +60,19 @@ public class ToutaticeRPTaskActionsBean extends ToutaticeTaskActionsBean {
         return ToutaticeRPConstants.CST_WORKFLOW_TASK_VALIDATION_VALIDATE;
     }
 
-    public Task getValidateTask() throws ClientException {
+    public Task getValidateTask() throws NuxeoException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         return ToutaticeWorkflowHelper.getTaskByName(ToutaticeRPConstants.CST_WORKFLOW_TASK_VALIDATION_VALIDATE, documentManager, currentDocument);
     }
     
-    public boolean isValidateTask(Task task) throws ClientException {
+    public boolean isValidateTask(Task task) throws NuxeoException {
         if (task != null) {
             return ToutaticeRPConstants.CST_WORKFLOW_TASK_VALIDATION_VALIDATE.equals(task.getName());
         }
         return false;
     }
     
-    public boolean isValidateActionAuthorized() throws ClientException {
+    public boolean isValidateActionAuthorized() throws NuxeoException {
         return isTaskActionAuthorized(ToutaticeRPConstants.CST_WORKFLOW_TASK_VALIDATION_VALIDATE);
     }
 

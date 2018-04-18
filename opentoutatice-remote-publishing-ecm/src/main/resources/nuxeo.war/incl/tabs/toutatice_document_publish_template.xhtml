@@ -1,98 +1,113 @@
 <f:subview xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:c="http://java.sun.com/jstl/core"	
+	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:nxd="http://nuxeo.org/nxweb/document"
 	xmlns:nxh="http://nuxeo.org/nxweb/html"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
-	xmlns:rich="http://richfaces.org/rich" >
+	xmlns:rich="http://richfaces.org/rich">
 
-	<link rel="stylesheet" type="text/css" href="${baseURL}css/toutatice_default_template.css" />
+	<link rel="stylesheet" type="text/css"
+		href="${baseURL}css/toutatice_default_template.css" />
 
 	<div class="menu">
-	
-		<c:set var="userSectionsByMaster" value="#{sectionsManager.getSections()}" /> 
-		<c:set var="publishableDocument" value="#{userSectionsByMaster.getPublishableDoc()}" /> 
 
-				<div class="publishInfoMessage">
-					<h:outputText value="#{messages['toutatice.label.publish.no.authorized.section']}" rendered="#{userSectionsByMaster.size() == 0}"/>
+		<c:set var="userSectionsByMaster"
+			value="#{sectionsManager.getSections()}" />
+		<c:set var="publishableDocument"
+			value="#{userSectionsByMaster.getPublishableDoc()}" />
+
+		<div class="publishInfoMessage">
+			<h:outputText
+				value="#{messages['toutatice.label.publish.no.authorized.section']}"
+				rendered="#{userSectionsByMaster.size() == 0}" />
+		</div>
+
+		<a4j:outputPanel ajaxRendered="true"
+			rendered="#{userSectionsByMaster.size() > 0}">
+			<h:form ajaxSubmit="true" id="publishTreeForm">
+				<div class="toutatice_remote_publication">
+					<a4j:outputPanel id="sectionList">
+
+						<h1>
+							<h:outputText value="#{messages['toutatice.tree.title']}" />
+						</h1>
+
+						<nxu:dataTable value="#{userSectionsByMaster}"
+							var="userSectionByMaster" preserveSort="true"
+							preserveDataModel="false" rowClasses="dataRowEven,dataRowOdd"
+							sortable="false" styleClass="dataList">
+
+							<!-- Espace de publication -->
+							<nxu:column>
+								<f:facet name="header">
+									<h:outputText
+										value="#{messages['toutatice.label.publish.to.header.area']}" />
+								</f:facet>
+								<h:outputText
+									value="#{userSectionByMaster.getSpace().getTitle()}" />
+							</nxu:column>
+
+							<ui:param name="userSection"
+								value="#{userSectionByMaster.getUserRootSection()}" />
+
+							<!-- Nom de la section -->
+							<nxu:column>
+								<f:facet name="header">
+									<h:outputText
+										value="#{messages['toutatice.label.publish.to.header.section']}" />
+								</f:facet>
+								<nxd:restDocumentLink document="#{userSection.section}">
+									<h:outputText value="#{userSection.section.getTitle()}" />
+								</nxd:restDocumentLink>
+							</nxu:column>
+
+							<!-- Version publiée du document -->
+							<nxu:column>
+								<f:facet name="header">
+									<h:outputText
+										value="#{messages['toutatice.label.publish.header.version']}" />
+								</f:facet>
+								<h:outputText
+									value="#{userSection.publishedDoc.getSourceVersionLabel()}" />
+								<a4j:commandLink id="unpublishCommandLink" immediate="true"
+									action="#{acrennesPublishingActions.unPublish(userSection.publishedDoc)}"
+									rendered="#{userSection.canUnPublishFrom()}"
+									render="sectionList facesStatusMessagePanel">
+									<h:outputText
+										value=" (#{messages['command.document.unpublish']})" />
+								</a4j:commandLink>
+							</nxu:column>
+
+							<!--  Version publiable du document -->
+							<nxu:column>
+								<f:facet name="header">
+									<h:outputText
+										value="#{messages['toutatice.label.publishable.header.version']}" />
+								</f:facet>
+
+								<h:outputText value="#{publishableDocument.getVersionLabel()}"
+									rendered="#{not publishableDocument.hasError(userSection.section)}" />
+								<h:outputText
+									value="#{messages[publishableDocument.getError(userSection.section).getMessageKey()]}"
+									rendered="#{publishableDocument.hasError(userSection.section)}" />
+
+								<a4j:commandLink id="publishCommandLink" immediate="true"
+									action="#{acrennesPublishingActions.publish(publishableDocument.getModel(), userSection.getSection())}"
+									rendered="#{userSection.canPublishTo()}"
+									render="sectionList facesStatusMessagePanel">
+									<h:outputText
+										value=" (#{messages['toutatice.label.publish.publish']})" />
+								</a4j:commandLink>
+
+							</nxu:column>
+						</nxu:dataTable>
+
+					</a4j:outputPanel>
 				</div>
-
-				<a4j:outputPanel ajaxRendered="true" rendered="#{userSectionsByMaster.size() > 0}">
-					<h:form ajaxSubmit="true" id="publishTreeForm">
-								<div class="toutatice_remote_publication">
-									<a4j:outputPanel id="sectionList">
-			
-										<h1><h:outputText value="#{messages['toutatice.tree.title']}" /></h1>
-			
-										<nxu:dataTable value="#{userSectionsByMaster}"
-											var="userSectionByMaster" 
-											preserveSort="true" 
-											preserveDataModel="false"
-											rowClasses="dataRowEven,dataRowOdd" 
-											sortable="false"
-											styleClass="dataList">
-			
-											<!-- Espace de publication -->
-											<nxu:column>
-												<f:facet name="header">
-													<h:outputText value="#{messages['toutatice.label.publish.to.header.area']}" />
-												</f:facet>
-												<h:outputText value="#{userSectionByMaster.getSpace().getTitle()}" />
-											</nxu:column>
-											
-											<ui:param name="userSection" value="#{userSectionByMaster.getUserRootSection()}" /> 
-									
-											<!-- Nom de la section -->
-											<nxu:column>
-												<f:facet name="header">
-													<h:outputText value="#{messages['toutatice.label.publish.to.header.section']}" />
-												</f:facet>
-												<nxd:restDocumentLink document="#{userSection.section}">
-													<h:outputText value="#{userSection.section.getTitle()}" />
-												</nxd:restDocumentLink>
-											</nxu:column>
-												
-											<!-- Version publiée du document -->
-											<nxu:column>
-												<f:facet name="header">
-													<h:outputText value="#{messages['toutatice.label.publish.header.version']}" />
-												</f:facet>
-												<h:outputText value="#{userSection.publishedDoc.getSourceVersionLabel()}" />
-												<a4j:commandLink id="unpublishCommandLink"
-													immediate="true"
-													action="#{acrennesPublishingActions.unPublish(userSection.publishedDoc)}"
-													rendered="#{userSection.canUnPublishFrom()}"
-													render="sectionList facesStatusMessagePanel" >
-													<h:outputText value=" (#{messages['command.document.unpublish']})" />
-												</a4j:commandLink>
-											</nxu:column>
-									
-											<!--  Version publiable du document -->
-											<nxu:column>
-												<f:facet name="header">
-													<h:outputText value="#{messages['toutatice.label.publishable.header.version']}" />
-												</f:facet>
-												
-												<h:outputText value="#{publishableDocument.getVersionLabel()}" rendered="#{not publishableDocument.hasError(userSection.section)}"/> 
-												<h:outputText value="#{messages[publishableDocument.getError(userSection.section).getMessageKey()]}" rendered="#{publishableDocument.hasError(userSection.section)}"/>
-												
-												<a4j:commandLink id="publishCommandLink" 
-													immediate="true"
-													action="#{acrennesPublishingActions.publish(publishableDocument.getModel(), userSection.getSection())}"
-													rendered="#{userSection.canPublishTo()}"
-													render="sectionList facesStatusMessagePanel" >
-													<h:outputText value=" (#{messages['toutatice.label.publish.publish']})" />
-												</a4j:commandLink>
-
-											</nxu:column>
-										</nxu:dataTable>
-								
-									</a4j:outputPanel>
-								</div>
-					</h:form>
-				</a4j:outputPanel>
+			</h:form>
+		</a4j:outputPanel>
 
 	</div>
 </f:subview>

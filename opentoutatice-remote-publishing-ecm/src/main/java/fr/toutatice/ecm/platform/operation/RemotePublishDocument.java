@@ -29,7 +29,7 @@ import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.core.collectors.DocumentModelCollector;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -85,7 +85,7 @@ public class RemotePublishDocument {
 			// si il n'y a pas de transition défini alors le document doit être
 			// valider manuellement avant la publication
 			if (StringUtils.isBlank(transition)) {
-				throw new ClientException("Veuillez valider votre document ");
+				throw new NuxeoException("Veuillez valider votre document ");
 			}
 			// si le document est en projet: le valider
 			if (ToutaticeNuxeoStudioConst.CST_DOC_STATE_PROJECT.equals(doc.getCurrentLifeCycleState())) {
@@ -131,7 +131,7 @@ public class RemotePublishDocument {
 			
 
 		} else {
-			throw new ClientException("Failed to get the target document reference");
+			throw new NuxeoException("Failed to get the target document reference");
 		}
 
 
@@ -158,7 +158,7 @@ public class RemotePublishDocument {
 		}
 
 		@Override
-		public void run() throws ClientException {
+		public void run() throws NuxeoException {
 
 			this.newProxy = null;
 

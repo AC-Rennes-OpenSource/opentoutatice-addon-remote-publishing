@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -55,9 +55,9 @@ public class AcrennesPublishedDocumentWithWorkflowFactory extends ToutaticeCoreP
      * @param docToPublish
      * @param section
      * @return
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public PublishedDocument publish(CoreSession session, DocumentModel docToPublish, DocumentModel section) throws ClientException {
+    public PublishedDocument publish(CoreSession session, DocumentModel docToPublish, DocumentModel section) throws NuxeoException {
         // Result
         DocumentModel publishedDocument = null;
         PublishedDocument publishedDoc = null;

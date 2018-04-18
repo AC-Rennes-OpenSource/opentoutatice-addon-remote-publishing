@@ -30,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
@@ -54,21 +54,21 @@ public class ToutaticeRPDocumentRoutingActionsBean extends ToutaticeDocumentRout
 
     private static final Log log = LogFactory.getLog(ToutaticeRPDocumentRoutingActionsBean.class);
 
-    public String startValidationWorkflow() throws ClientException {
+    public String startValidationWorkflow() throws NuxeoException {
         DocumentModel validationWf = getValidationWorkflowModel();
         return startWorkflow(validationWf, "toutatice.label.validation.wf.started");
     }
 
-    private DocumentModel getValidationWorkflowModel() throws ClientException {
+    private DocumentModel getValidationWorkflowModel() throws NuxeoException {
         String id = getDocumentRoutingService().getRouteModelDocIdWithId(documentManager, ToutaticeRPConstants.CST_WORKFLOW_VALIDATION);
         return getRouteModel(id);
     }
 
-    public String cancelValidationWorkflow() throws ClientException {
+    public String cancelValidationWorkflow() throws NuxeoException {
         return super.cancelWorkflow(ToutaticeRPConstants.CST_WORKFLOW_VALIDATION);
     }
 
-    public boolean isCancelValidationActionAuthorized() throws ClientException {
+    public boolean isCancelValidationActionAuthorized() throws NuxeoException {
         boolean doWorkflowExist = false;
         boolean isUserInitiator = false;
 
@@ -93,7 +93,7 @@ public class ToutaticeRPDocumentRoutingActionsBean extends ToutaticeDocumentRout
     }
 
     @Override
-    public Task getValidateTask(String wfName) throws ClientException {
+    public Task getValidateTask(String wfName) throws NuxeoException {
         Task validate = null;
 
         String taskName = StringUtils.EMPTY;

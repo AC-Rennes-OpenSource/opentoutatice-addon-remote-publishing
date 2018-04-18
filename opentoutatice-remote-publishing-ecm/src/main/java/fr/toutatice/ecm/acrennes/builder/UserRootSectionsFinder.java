@@ -11,11 +11,11 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.Filter;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.publisher.impl.finder.AbstractRootSectionsFinder;
@@ -101,7 +101,7 @@ public class UserRootSectionsFinder extends UnrestrictedSessionRunner {
 
                 // Get documents (implicitly filtered on Read permission)
                 String query = String.format(CONFIGURED_ROOT_SECTIONS_QUERY, NxqlHelper.buildInClause(rootSectionsIds));
-                sections = ToutaticeEsQueryHelper.unretrictedQuery(userSession, query, rootSectionsIds.size());
+                sections = ToutaticeEsQueryHelper.unrestrictedQuery(userSession, query, rootSectionsIds.size());
 
                 // Set in cache
                 sectionsByDocCache.put(document.getId(), sections);
@@ -138,7 +138,7 @@ public class UserRootSectionsFinder extends UnrestrictedSessionRunner {
      * Gets Root sections configured on one of document's parent having publishing schema in unrestricted way.
      */
     @Override
-    public void run() throws ClientException {
+    public void run() throws NuxeoException {
         // Get list of ids of configured Root sections
         DocumentModel publishingFolder = getPublishingFolder(this.session, this.currentDoc);
 

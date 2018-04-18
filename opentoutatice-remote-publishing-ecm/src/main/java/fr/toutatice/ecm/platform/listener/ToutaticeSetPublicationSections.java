@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jboss.seam.core.Events;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -42,7 +42,7 @@ public class ToutaticeSetPublicationSections implements EventListener {
 //	private static final Log log = LogFactory.getLog(AcarenSetPublicationSections.class);
 	
 	@Override
-	public void handleEvent(Event event) throws ClientException {
+	public void handleEvent(Event event) throws NuxeoException {
 		if (event.getContext() instanceof DocumentEventContext) {
 			DocumentEventContext  eventContext = (DocumentEventContext) event.getContext();
 			DocumentModel document = eventContext.getSourceDocument();

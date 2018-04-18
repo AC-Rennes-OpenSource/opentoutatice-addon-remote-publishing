@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.common.utils.StringUtils;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -58,7 +58,7 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
      * @see org.nuxeo.ecm.platform.publisher.helper.RootSectionsFinder#getFiltredSectionRoots(java.util.List, boolean)
      */
     @Override
-    protected DocumentModelList getFiltredSectionRoots(List<String> rootPaths, boolean onlyHeads) throws ClientException {
+    protected DocumentModelList getFiltredSectionRoots(List<String> rootPaths, boolean onlyHeads) throws NuxeoException {
         List<DocumentRef> filtredDocRef = new ArrayList<DocumentRef>();
         List<DocumentRef> trashedDocRef = new ArrayList<DocumentRef>();
 
@@ -88,7 +88,7 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
     }
 
     @Override
-    protected void computeUnrestrictedRoots(CoreSession session) throws ClientException {
+    protected void computeUnrestrictedRoots(CoreSession session) throws NuxeoException {
 
         if (currentDocument != null) {
             /*
@@ -112,7 +112,7 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
 
     }
 
-    protected void computeUnrestrictedLocalRoots(CoreSession session) throws ClientException {
+    protected void computeUnrestrictedLocalRoots(CoreSession session) throws NuxeoException {
 
         if (currentDocument != null) {
             DocumentModelList sectionRootsFromWorkspaceConfig = getSectionRootsFromWorkspaceConfig(currentDocument, session);
@@ -130,12 +130,12 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
     }
 
     @Override
-    public DocumentModelList getSectionRootsForWorkspace(DocumentModel currentDoc, boolean addDefaultSectionRoots) throws ClientException {
+    public DocumentModelList getSectionRootsForWorkspace(DocumentModel currentDoc, boolean addDefaultSectionRoots) throws NuxeoException {
         return getSectionRootsForWorkspace(currentDoc, addDefaultSectionRoots, ROOT_SECTION_TYPE.ALL);
     }
 
     public DocumentModelList getSectionRootsForWorkspace(DocumentModel currentDoc, boolean addDefaultSectionRoots, ROOT_SECTION_TYPE sectionListType)
-            throws ClientException {
+            throws NuxeoException {
         if ((currentDocument == null) || (!currentDocument.getRef().equals(currentDoc.getRef()))) {
             computeUserSectionRoots(currentDoc);
         }
@@ -160,7 +160,7 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
         return getFiltredSectionRoots(agregatedList, true);
     }
 
-    public DocumentModelList getSectionRootsForLocal(DocumentModel currentDoc, boolean addDefaultSectionRoots) throws ClientException {
+    public DocumentModelList getSectionRootsForLocal(DocumentModel currentDoc, boolean addDefaultSectionRoots) throws NuxeoException {
         if ((currentDocument == null) || (!currentDocument.getRef().equals(currentDoc.getRef()))) {
             computeUserSectionRoots(currentDoc);
         }
@@ -178,9 +178,9 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
      * @param session
      * @param document
      * @return parent having publishing:sections not empty
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    private DocumentModel getPublishingParent(CoreSession session, DocumentModel document) throws ClientException {
+    private DocumentModel getPublishingParent(CoreSession session, DocumentModel document) throws NuxeoException {
         // Result
         DocumentModel publishingParent = null;
 
@@ -220,7 +220,7 @@ public class ToutaticeRemoteRootSectionsFinder extends ToutaticeRootSectionsFind
     }
 
     @Override
-    public void run() throws ClientException {
+    public void run() throws NuxeoException {
         computeUnrestrictedRoots(session);
         computeUnrestrictedLocalRoots(session);
     }

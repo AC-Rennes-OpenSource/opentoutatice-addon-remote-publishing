@@ -38,12 +38,12 @@ import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.international.StatusMessage;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.IdRef;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
@@ -54,7 +54,6 @@ import org.nuxeo.ecm.platform.publisher.api.PublicationNode;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTreeNotAvailable;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
-import org.nuxeo.ecm.platform.publisher.api.PublisherException;
 import org.nuxeo.ecm.platform.publisher.api.PublisherService;
 import org.nuxeo.ecm.platform.publisher.api.PublishingEvent;
 import org.nuxeo.ecm.platform.publisher.helper.RootSectionFinder;
@@ -138,7 +137,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
 
         try {
             status = (getPublishableDoc() != null) ? true : false;
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             DocumentModel currentDocument = navigationContext.getCurrentDocument();
             String docName = (null != currentDocument) ? currentDocument.getName() : "<unknown>";
 
@@ -150,7 +149,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return status;
     }
 
-    public boolean canPublishTo(DocumentModel section) throws ClientException {
+    public boolean canPublishTo(DocumentModel section) throws NuxeoException {
         boolean status = false;
 
         try {
@@ -183,7 +182,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return status;
     }
 
-    public boolean canUnpublishFrom(DocumentModel section) throws ClientException {
+    public boolean canUnpublishFrom(DocumentModel section) throws NuxeoException {
         boolean status = false;
 
         try {
@@ -198,7 +197,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return status;
     }
 
-    public String doPublish(DocumentModel section) throws ClientException {
+    public String doPublish(DocumentModel section) throws NuxeoException {
         String status = doPublishVersion(section);
         removeFromPublishContext(section);
         return status;
@@ -212,7 +211,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
      * @see org.nuxeo.ecm.platform.publisher.web.PublishActionsBean#doPublish(org.nuxeo.ecm.platform.publisher.api.PublicationTree,
      *      org.nuxeo.ecm.platform.publisher.api.PublicationNode)
      */
-    public String doPublishVersion(DocumentModel section) throws ClientException {
+    public String doPublishVersion(DocumentModel section) throws NuxeoException {
         PublicationTree tree = getCurrentPublicationTreeForPublishing();
         if (tree == null) {
             return null;
@@ -247,11 +246,9 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
             // renommage du proxy pour suivre la convention de nommage (en mode unrestricted car le demandeur n'a pas de droit d'écriture sur le dossier cible)
             UnrestrictedSessionRunner runner = new UnrestrictedSetProxyNameRunner(documentManager, publishedDocument, formerProxyName, section);
             runner.runUnrestricted();
-        } catch (PublisherException e) {
+        } catch (NuxeoException e) {
             log.error(e, e);
-
             facesMessages.addFromResourceBundle(StatusMessage.Severity.ERROR, messages.get("document_published"), messages.get(e.getMessage()));
-
             return null;
         }
 
@@ -291,7 +288,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             DocumentRef sdRef = this.publishedDocument.getSourceDocumentRef();
             DocumentModel dm = this.session.getSourceDocument(sdRef);
             String newProxyName = dm.getName();
@@ -308,7 +305,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
 
     }
 
-    public String unPublishFrom(DocumentModel section) throws ClientException {
+    public String unPublishFrom(DocumentModel section) throws NuxeoException {
         String result = null;
 
         PublishedDocument publishedDoc = getPublishedDoc(section);
@@ -331,13 +328,13 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
                     }
                 }
             }
-        } catch (ClientException ce) {
+        } catch (NuxeoException ce) {
             log.error("Failed to list the sections containing a published document, error: " + ce.getMessage());
         }
         return notEmptySections;
     }
 
-    public String getPublishedVersion(DocumentModel section) throws ClientException {
+    public String getPublishedVersion(DocumentModel section) throws NuxeoException {
         String versionLabel = "";
 
         PublishedDocument publishedDoc = getPublishedDoc(section);
@@ -348,7 +345,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return versionLabel;
     }
 
-    public String getPublishableVersion(DocumentModel section) throws ClientException {
+    public String getPublishableVersion(DocumentModel section) throws NuxeoException {
         String versionLabel = "";
 
         DocumentModel publishableDoc = getPublishableDoc();
@@ -382,14 +379,14 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
                     || documentManager.hasPermission(section.getRef(), "CanAskForPublishing")) {
                 status = true;
             }
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             log.debug("Failed to check the permission on the publication sections '" + section.getName() + "'");
         }
 
         return status;
     }
 
-    public String getActionLabel(DocumentModel section) throws ClientException {
+    public String getActionLabel(DocumentModel section) throws NuxeoException {
         String actionLabel = messages.get("label.publish.publish");
 
         PublishedDocument publishedDoc = getPublishedDoc(section);
@@ -400,7 +397,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return actionLabel;
     }
 
-    public PublishedDocument getPublishedDoc(DocumentModel section) throws ClientException {
+    public PublishedDocument getPublishedDoc(DocumentModel section) throws NuxeoException {
 
         if (null == this.publishedDocInSectionMap) {
             this.publishedDocInSectionMap = new HashMap<String, PublishedDocument>();
@@ -436,11 +433,11 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
      *            document recherché
      * @param majMap
      *            mise à jour du 'cache' publishedDocInSectionMap
-     * @throws ClientException
+     * @throws NuxeoException
      * @return true si le document est
      * 
      */
-    private PublishedDocument findPublishedDocInSection(DocumentModel section, DocumentModel doc) throws ClientException {
+    private PublishedDocument findPublishedDocInSection(DocumentModel section, DocumentModel doc) throws NuxeoException {
 
         List<PublishedDocument> publishedDocList = null;
         PublishedDocument res = null;
@@ -468,7 +465,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return res;
     }
 
-    public List<PublishedDocument> getPublishedDocumentsFor(String treeName, DocumentModel doc) throws ClientException {
+    public List<PublishedDocument> getPublishedDocumentsFor(String treeName, DocumentModel doc) throws NuxeoException {
         if (treeName == null || "".equals(treeName)) {
             return null;
         }
@@ -493,7 +490,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return treeName;
     }
 
-    private DocumentModel getPublishableDoc() throws ClientException {
+    private DocumentModel getPublishableDoc() throws NuxeoException {
         if (null == publishableDocInSection) {
             DocumentModel currentDoc = navigationContext.getCurrentDocument();
             if (null != currentDoc) {
@@ -514,8 +511,9 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         this.publishedDocsOfTreeMap.remove(treeName);
     }
 
-    @Observer(value = {EventNames.DOCUMENT_SELECTION_CHANGED, EventNames.DOMAIN_SELECTION_CHANGED, EventNames.CONTENT_ROOT_SELECTION_CHANGED,
-            EventNames.DOCUMENT_PUBLICATION_APPROVED, EventNames.DOCUMENT_PUBLICATION_REJECTED, EventNames.DOCUMENT_CHANGED, EventNames.GO_HOME},
+    @Observer(
+            value = {EventNames.DOCUMENT_SELECTION_CHANGED, EventNames.DOMAIN_SELECTION_CHANGED, EventNames.CONTENT_ROOT_SELECTION_CHANGED,
+                    EventNames.DOCUMENT_PUBLICATION_APPROVED, EventNames.DOCUMENT_PUBLICATION_REJECTED, EventNames.DOCUMENT_CHANGED, EventNames.GO_HOME},
             create = false)
     public void resetPublishContext() {
         publishableDocInSection = null;
@@ -566,13 +564,13 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
                 }
             }
 
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             log.error("Failed to check currentLifeCycleState, error: " + e.getMessage());
         }
         return res;
     }
 
-    public String getParentFormattedPath(DocumentModel document) throws ClientException {
+    public String getParentFormattedPath(DocumentModel document) throws NuxeoException {
         String path = "";
 
         DocumentModel parentModel = getDocumentModelForParent(document);
@@ -583,7 +581,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return path;
     }
 
-    public DocumentModel getDocumentModelForParent(DocumentModel document) throws ClientException {
+    public DocumentModel getDocumentModelForParent(DocumentModel document) throws NuxeoException {
         DocumentRef parentRef = document.getParentRef();
         if (null != parentRef) {
             return documentManager.getDocument(parentRef);
@@ -591,7 +589,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return null;
     }
 
-    public void unpublishFromProxy(DocumentModel proxy) throws ClientException {
+    public void unpublishFromProxy(DocumentModel proxy) throws NuxeoException {
         List<DocumentModel> list = new ArrayList<DocumentModel>();
         list.add(proxy);
         super.unpublish(list);
@@ -602,9 +600,9 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
      * utiliser ou non l'action publier/rejeter
      * 
      * @return
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public boolean getIsWaitingForPublication() throws ClientException {
+    public boolean getIsWaitingForPublication() throws NuxeoException {
         boolean isWaitingForPublication = false;
 
         try {
@@ -637,9 +635,9 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
      * utiliser ou non l'action publier/rejeter
      * 
      * @return
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public boolean getCanUnpublishSectionSelection() throws ClientException {
+    public boolean getCanUnpublishSectionSelection() throws NuxeoException {
         boolean status = false;
 
         List<DocumentModel> selectedDocuments = documentsListsManager.getWorkingList(DocumentsListsManager.CURRENT_DOCUMENT_SECTION_SELECTION);
@@ -657,7 +655,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return status;
     }
 
-    public void approveDocumentsFromCurrentSelection() throws ClientException {
+    public void approveDocumentsFromCurrentSelection() throws NuxeoException {
         List<DocumentModel> selectedDocuments = documentsListsManager.getWorkingList(DocumentsListsManager.CURRENT_DOCUMENT_SECTION_SELECTION);
         if (!(selectedDocuments == null || selectedDocuments.isEmpty())) {
             for (DocumentModel document : selectedDocuments) {
@@ -668,7 +666,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         }
     }
 
-    public void rejectDocumentsFromCurrentSelection() throws ClientException {
+    public void rejectDocumentsFromCurrentSelection() throws NuxeoException {
         List<DocumentModel> selectedDocuments = documentsListsManager.getWorkingList(DocumentsListsManager.CURRENT_DOCUMENT_SECTION_SELECTION);
         if (!(selectedDocuments == null || selectedDocuments.isEmpty())) {
             this.publishingComment = CST_DEFAULT_DOCUMENT_SELECTION_REJECT_COMMENT;
@@ -681,18 +679,18 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
     }
 
     @Override
-    public String approveDocument() throws ClientException {
+    public String approveDocument() throws NuxeoException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         return approveDocument(currentDocument);
     }
 
     @Override
-    public String rejectDocument() throws ClientException {
+    public String rejectDocument() throws NuxeoException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         return rejectDocument(currentDocument);
     }
 
-    public String approveDocument(DocumentModel document) throws ClientException {
+    public String approveDocument(DocumentModel document) throws NuxeoException {
         PublicationTree tree = getPublicationTreeFor(document);
         PublishedDocument publishedDocument = tree.wrapToPublishedDocument(document);
 
@@ -743,9 +741,10 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         // notifer
         try {
             FacesContext context = FacesContext.getCurrentInstance();
-            String comment = publishingComment != null && publishingComment.length() > 0 ? ComponentUtils.translate(context,
-                    "publishing.approved.with.comment", publishedDocument.getParentPath(), tree.getConfigName(), publishingComment) : ComponentUtils.translate(
-                    context, "publishing.approved.without.comment", publishedDocument.getParentPath(), tree.getConfigName());
+            String comment = publishingComment != null && publishingComment.length() > 0
+                    ? ComponentUtils.translate(context, "publishing.approved.with.comment", publishedDocument.getParentPath(), tree.getConfigName(),
+                            publishingComment)
+                    : ComponentUtils.translate(context, "publishing.approved.without.comment", publishedDocument.getParentPath(), tree.getConfigName());
 
             ApproverWithoutRestriction approver = new ApproverWithoutRestriction(publishedDocument, comment, documentManager);
             if (documentManager.hasPermission(publishedDocument.getSourceDocumentRef(), SecurityConstants.WRITE)) {
@@ -773,7 +772,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         contentViewActions.resetPageProviderOnSeamEvent("documentPublicationEvent");
     }
 
-    public String rejectDocument(DocumentModel document) throws ClientException {
+    public String rejectDocument(DocumentModel document) throws NuxeoException {
         if (StringUtils.isBlank(publishingComment)) {
             facesMessages.addToControl("publishingComment", StatusMessage.Severity.ERROR, messages.get("label.publishing.reject.user.comment.mandatory"));
             return null;
@@ -785,9 +784,10 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
             tree.validatorRejectPublication(publishedDocument, publishingComment);
 
             FacesContext context = FacesContext.getCurrentInstance();
-            String comment = publishingComment != null && publishingComment.length() > 0 ? ComponentUtils.translate(context,
-                    "publishing.rejected.with.comment", publishedDocument.getParentPath(), tree.getConfigName(), publishingComment) : ComponentUtils.translate(
-                    context, "publishing.rejected.without.comment", publishedDocument.getParentPath(), tree.getConfigName());
+            String comment = publishingComment != null && publishingComment.length() > 0
+                    ? ComponentUtils.translate(context, "publishing.rejected.with.comment", publishedDocument.getParentPath(), tree.getConfigName(),
+                            publishingComment)
+                    : ComponentUtils.translate(context, "publishing.rejected.without.comment", publishedDocument.getParentPath(), tree.getConfigName());
             RejectWithoutRestrictionRunner runner = new RejectWithoutRestrictionRunner(documentManager, publishedDocument, comment);
 
             if (documentManager.hasPermission(publishedDocument.getSourceDocumentRef(), SecurityConstants.READ)) {
@@ -796,7 +796,8 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
                 runner.runUnrestricted();
             }
         } catch (Exception e) {
-            log.warn("Faied to reject the document '" + document.getTitle() + "'. It may point to a no more existing source document, error: " + e.getMessage());
+            log.warn(
+                    "Faied to reject the document '" + document.getTitle() + "'. It may point to a no more existing source document, error: " + e.getMessage());
         }
 
         Events.instance().raiseEvent(EventNames.DOCUMENT_PUBLICATION_REJECTED);
@@ -804,16 +805,17 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
     }
 
     @Override
-    public boolean isPending() throws ClientException {
+    public boolean isPending() throws NuxeoException {
         return isPending(navigationContext.getCurrentDocument());
     }
 
-    public boolean isPending(DocumentModel document) throws ClientException {
+    @Override
+    public boolean isPending(DocumentModel document) throws NuxeoException {
         PublishedDocument publishedDocument = getPublishedDocumentModel(document);
         return (null != publishedDocument) ? publishedDocument.isPending() : false;
     }
 
-    public void unPublish(DocumentModel document) throws ClientException {
+    public void unPublish(DocumentModel document) throws NuxeoException {
         if (isPending(document)) {
             setPublishingComment(CST_DEFAULT_DOCUMENT_SELECTION_REJECT_COMMENT);
             rejectDocument(document);
@@ -825,9 +827,9 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
     /**
      * 
      * @return true si au moins un des documents sélectionnés est publié
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public boolean isAtLeastOnePublished() throws ClientException {
+    public boolean isAtLeastOnePublished() throws NuxeoException {
         boolean status = false;
 
         if (mapIsPublishedDoc == null) {
@@ -869,7 +871,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
      * @see org.nuxeo.ecm.platform.publisher.web.PublishActionsBean#getPublishedDocumentsFor(java.lang.String)
      */
     @Override
-    public List<PublishedDocument> getPublishedDocumentsFor(String treeName) throws ClientException {
+    public List<PublishedDocument> getPublishedDocumentsFor(String treeName) throws NuxeoException {
         List<PublishedDocument> filteredList = new ArrayList<PublishedDocument>();
 
         try {
@@ -896,7 +898,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return this.publishedDocsOfTreeMap.get(treeName);
     }
 
-    private List<PublishedDocument> findPublishedDocsOfTree(String treeName, DocumentModel doc) throws ClientException {
+    private List<PublishedDocument> findPublishedDocsOfTree(String treeName, DocumentModel doc) throws NuxeoException {
         List<PublishedDocument> filteredList = new ArrayList<PublishedDocument>();
         DocumentModel docSrc = this.documentManager.getDocument(new IdRef(doc.getSourceId()));
         String sourceDocParentPath = docSrc.getPath().removeLastSegments(1).toString();
@@ -940,7 +942,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return publishedDocModelMap.get(document.getId());
     }
 
-    public void refreshUI() throws ClientException {
+    public void refreshUI() throws NuxeoException {
         // refresh the section content view that lists the published documents
         // into the section
         documentsListsManager.resetWorkingList(DocumentsListsManager.CURRENT_DOCUMENT_SECTION_SELECTION);
@@ -952,7 +954,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
      * 
      */
 
-    private PublicationTree getPublicationTreeFor(DocumentModel document) throws ClientException {
+    private PublicationTree getPublicationTreeFor(DocumentModel document) throws NuxeoException {
         if (null == PublicationTreeMap) {
             PublicationTreeMap = new HashMap<String, PublicationTree>();
         }
@@ -966,7 +968,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
     }
 
     @Override
-    public boolean canManagePublishing() throws ClientException {
+    public boolean canManagePublishing() throws NuxeoException {
         if (null == canManagePublishingMap) {
             canManagePublishingMap = new HashMap<String, Boolean>();
         }
@@ -981,7 +983,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
     }
 
     @Override
-    public boolean hasValidationTask() throws ClientException {
+    public boolean hasValidationTask() throws NuxeoException {
         if (null == hasValidationTaskMap) {
             hasValidationTaskMap = new HashMap<String, Boolean>();
         }
@@ -995,7 +997,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         return hasValidationTaskMap.get(document.getId());
     }
 
-    private PublicationNode wrapToPublicationNode(DocumentModel document) throws ClientException {
+    private PublicationNode wrapToPublicationNode(DocumentModel document) throws NuxeoException {
         if (null == PublicationNodeMap) {
             PublicationNodeMap = new HashMap<String, PublicationNode>();
         }
@@ -1022,13 +1024,13 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             sourceDocument = session.getDocument(publishedDocument.getSourceDocumentRef());
             liveVersion = session.getDocument(new IdRef(sourceDocument.getSourceId()));
             notifyRejectToSourceDocument();
         }
 
-        private void notifyRejectToSourceDocument() throws ClientException {
+        private void notifyRejectToSourceDocument() throws NuxeoException {
             notifyEvent(PublishingEvent.documentPublicationRejected.name(), null, comment, null, sourceDocument);
             if (!sourceDocument.getRef().equals(liveVersion.getRef())) {
                 notifyEvent(PublishingEvent.documentPublicationRejected.name(), null, comment, null, liveVersion);
@@ -1041,9 +1043,9 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
      * retrouve la premier section de publication et vérifie que le document peut-être publié sans contrôle sur la validation.
      * 
      * @return
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public boolean getCanPublishToFirstSection() throws ClientException {
+    public boolean getCanPublishToFirstSection() throws NuxeoException {
         DocumentModel section = null;
         DocumentModel doc = navigationContext.getCurrentDocument();
         PublisherService ps = Framework.getLocalService(PublisherService.class);
@@ -1068,7 +1070,7 @@ public class ToutaticeRemotePublishActionsBean extends ToutaticePublishActionsBe
     }
 
     @Override
-    protected List<String> filterEmptyTrees(Collection<String> trees) throws PublicationTreeNotAvailable, ClientException {
+    protected List<String> filterEmptyTrees(Collection<String> trees) throws PublicationTreeNotAvailable, NuxeoException {
         List<String> filteredTrees = new ArrayList<>();
 
         ToutaticeRemoteRootSectionsFinder finder = new ToutaticeRemoteRootSectionsFinder(documentManager);

@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -52,7 +52,7 @@ public class ToutaticePropagateSectionsAsynchronouslyListener implements PostCom
 	private static final String[] ACCEPTED_LIFE_CYCLE_STATES = new String[] {ToutaticeNuxeoStudioConst.CST_DOC_STATE_PROJECT, ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED};
 
 	@Override
-	public void handleEvent(EventBundle events) throws ClientException {
+	public void handleEvent(EventBundle events) throws NuxeoException {
 
         for (Event event : events) {
             if (ToutaticeGlobalConst.CST_EVENT_PROPAGATE_SECTIONS.equals(event.getName())) {
@@ -65,9 +65,9 @@ public class ToutaticePropagateSectionsAsynchronouslyListener implements PostCom
      * Propage les sections du document courant à tous les documents qui ont une liste de sections vide.
      * 
      * @param event l'événement déclencheur 
-     * @throws ClientException erreur pendant le processus de propagation
+     * @throws NuxeoException erreur pendant le processus de propagation
      */
-	public void handleEventPropagateSections(Event event) throws ClientException {
+	public void handleEventPropagateSections(Event event) throws NuxeoException {
     	boolean runInUnrestrictedMode = false;
     	boolean doAppendSections = false;
     	String sectionId = ToutaticeGlobalConst.CST_EVENT_OPTION_VALUE_ALL;
@@ -145,7 +145,7 @@ public class ToutaticePropagateSectionsAsynchronouslyListener implements PostCom
 		}
     	
 		@Override
-		public void run() throws ClientException {
+		public void run() throws NuxeoException {
 			Filter documentFilter = null;
 			
 			// récupérer la liste des documents à mettre à jour
@@ -173,7 +173,7 @@ public class ToutaticePropagateSectionsAsynchronouslyListener implements PostCom
     	
     }
     
-    private void updateSectionList(DocumentModel document, String[] sectionIdsList, boolean doAppend) throws ClientException {
+    private void updateSectionList(DocumentModel document, String[] sectionIdsList, boolean doAppend) throws NuxeoException {
     	try {
     		String[] documentSectionIds = (String[]) document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_NUXEO_SECTIONS_PROPERTY_NAME);
     		

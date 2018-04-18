@@ -30,12 +30,12 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
-import org.opentoutatice.ecm.attached.images.bean.OttcDocumentActionsBean;
+import org.opentoutatice.ecm.tinymce.attached.blobs.bean.OttcDocumentActionsBean;
 
 import fr.toutatice.ecm.platform.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.constants.ToutaticeRPConstants;
@@ -87,11 +87,11 @@ public class ToutaticeRPDocumentActionsBean extends OttcDocumentActionsBean {
         return status;
     }
 
-    public String viewArchivedVersion() throws ClientException {
+    public String viewArchivedVersion() throws NuxeoException {
         return viewArchivedVersion(navigationContext.getCurrentDocument());
     }
 
-    public String viewArchivedVersion(DocumentModel document) throws ClientException {
+    public String viewArchivedVersion(DocumentModel document) throws NuxeoException {
         String output = "";
 
         try {
@@ -100,7 +100,7 @@ public class ToutaticeRPDocumentActionsBean extends OttcDocumentActionsBean {
                 output = navigationContext.navigateToDocument(document, ToutaticeDocumentHelper.getVersionModel(archivedDocument));
             }
         } catch (DocumentException e) {
-            throw new ClientException(e);
+            throw new NuxeoException(e);
         }
 
         return output;
@@ -112,7 +112,7 @@ public class ToutaticeRPDocumentActionsBean extends OttcDocumentActionsBean {
         return currentDocument.isProxy() && (!StringUtils.endsWith(currentDocument.getName(), ToutaticeGlobalConst.CST_PROXY_NAME_SUFFIX) || StringUtils.endsWith(currentDocument.getName(), ToutaticeRPConstants.CST_PROXY_REMOTE_LEGACY_NAME_SUFFIX));
     }
     
-    public void unPublishDocumentSelection() throws ClientException {
+    public void unPublishDocumentSelection() throws NuxeoException {
     	List<DocumentModel> currentDocumentSelection = documentsListsManager.getWorkingList(CURRENT_DOCUMENT_SELECTION);
         
         if (null != currentDocumentSelection && !currentDocumentSelection.isEmpty()) {
@@ -155,7 +155,7 @@ public class ToutaticeRPDocumentActionsBean extends OttcDocumentActionsBean {
             if (sectionRoot != null) {
                 try {
                     areaName = sectionRoot.getTitle();
-                } catch (ClientException e) {
+                } catch (NuxeoException e) {
                     log.error("Failed to get the domain title, error: " + e.getMessage());
                     areaName = CST_DEFAULT_PUBLICATON_AREA_TITLE;
                 }
@@ -168,7 +168,7 @@ public class ToutaticeRPDocumentActionsBean extends OttcDocumentActionsBean {
                 if (domain != null) {
                     try {
                         areaName = domain.getTitle();
-                    } catch (ClientException e) {
+                    } catch (NuxeoException e) {
                         log.error("Failed to get the domain title, error: " + e.getMessage());
                         areaName = CST_DEFAULT_PUBLICATON_AREA_TITLE;
                     }

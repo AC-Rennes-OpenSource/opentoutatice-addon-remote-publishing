@@ -8,7 +8,7 @@ import java.util.List;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.TaskImpl;
@@ -35,7 +35,7 @@ public class ToutaticeRPRoutingTaskActionsBean extends ToutaticeRoutingTaskActio
 	};
 
 	@Override
-	public String endTask(Task task) throws ClientException {
+	public String endTask(Task task) throws NuxeoException {
 		String view = MainTabsActions.DEFAULT_VIEW;
 		
 		if (TOUTATICE_RP_WF_ACTIONS.contains(getClickedButton())) {

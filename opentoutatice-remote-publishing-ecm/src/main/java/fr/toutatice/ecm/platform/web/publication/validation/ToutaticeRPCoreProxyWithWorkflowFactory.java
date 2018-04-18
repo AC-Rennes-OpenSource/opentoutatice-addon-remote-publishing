@@ -13,19 +13,19 @@
  *
  *
  * Contributors:
- *   mberhaut1
- *    
+ * mberhaut1
+ * 
  */
 package fr.toutatice.ecm.platform.web.publication.validation;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
-import org.nuxeo.ecm.platform.publisher.api.PublishingException;
 import org.nuxeo.ecm.platform.publisher.impl.core.SimpleCorePublishedDocument;
 
 import fr.toutatice.ecm.platform.web.publication.ToutaticeCoreProxyWithWorkflowFactory;
@@ -35,7 +35,7 @@ public class ToutaticeRPCoreProxyWithWorkflowFactory extends ToutaticeCoreProxyW
     private static final Log log = LogFactory.getLog(ToutaticeRPCoreProxyWithWorkflowFactory.class);
 
     @Override
-    protected boolean isPublished(PublishedDocument publishedDocument, CoreSession session) throws PublishingException {
+    protected boolean isPublished(PublishedDocument publishedDocument, CoreSession session) throws NuxeoException {
         boolean status = false;
 
         DocumentModel proxy = ((SimpleCorePublishedDocument) publishedDocument).getProxy();
@@ -49,7 +49,7 @@ public class ToutaticeRPCoreProxyWithWorkflowFactory extends ToutaticeCoreProxyW
     }
 
     @Override
-    protected boolean hasValidationTask(DocumentModel proxy, NuxeoPrincipal currentUser) throws ClientException {
+    protected boolean hasValidationTask(DocumentModel proxy, NuxeoPrincipal currentUser) throws NuxeoException {
         boolean isValidator = isValidator(proxy, currentUser);
         boolean isDocWaitingForPublication = isPublishedDocWaitingForPublication(proxy, coreSession);
         return isDocWaitingForPublication && isValidator;
