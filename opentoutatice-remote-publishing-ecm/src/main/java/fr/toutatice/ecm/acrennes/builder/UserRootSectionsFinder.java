@@ -101,7 +101,7 @@ public class UserRootSectionsFinder extends UnrestrictedSessionRunner {
 
                 // Get documents (implicitly filtered on Read permission)
                 String query = String.format(CONFIGURED_ROOT_SECTIONS_QUERY, NxqlHelper.buildInClause(rootSectionsIds));
-                sections = ToutaticeEsQueryHelper.unretrictedQuery(userSession, query, rootSectionsIds.size());
+                sections = ToutaticeEsQueryHelper.unrestrictedQuery(userSession, query, rootSectionsIds.size());
 
                 // Set in cache
                 sectionsByDocCache.put(document.getId(), sections);
