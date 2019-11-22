@@ -11,26 +11,16 @@
 	<version>4.7-SNAPSHOT</version>
 
 	<properties>
-		<nuxeo.version>6.1.0</nuxeo.version>
-		<!-- <nuxeo.cap.version>6.0</nuxeo.cap.version> -->
-		<opentoutatice.platform.version>4.7.17</opentoutatice.platform.version>
+		<nuxeo.version>6.1.1</nuxeo.version>
+		<opentoutatice.platform.version>4.7-SNAPSHOT</opentoutatice.platform.version>
 	</properties>
 
 	<modules>
 	   <module>opentoutatice-remote-publishing-ecm</module>
-	   <!-- <module>opentoutatice-remote-publishing-marketplace</module> -->
 	</modules>
 	
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.nuxeo.ecm.distribution</groupId>
-				<artifactId>nuxeo-distribution-cap</artifactId>
-				<version>${nuxeo.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			
 			<dependency>
 				<groupId>opentoutatice-ecm.platform</groupId>
 				<artifactId>opentoutatice-ecm-platform-core</artifactId>
@@ -54,7 +44,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.2.1</version>
 			 	<configuration>
 					<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice-addons/opentoutatice-remote-publishing/tags</tagBase>
 					<releaseProfiles>unpack,pack</releaseProfiles>
@@ -68,8 +57,8 @@
 				<version>3.1</version>
 				<configuration>
 					<encoding>UTF-8</encoding>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin> 
             <!-- Disable strict javadoc checking since java8 -->

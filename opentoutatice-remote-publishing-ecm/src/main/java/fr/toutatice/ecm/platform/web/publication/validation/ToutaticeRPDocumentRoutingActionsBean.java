@@ -55,8 +55,15 @@ public class ToutaticeRPDocumentRoutingActionsBean extends ToutaticeDocumentRout
     private static final Log log = LogFactory.getLog(ToutaticeRPDocumentRoutingActionsBean.class);
 
     public String startValidationWorkflow() throws ClientException {
+        String res = null;
+        
         DocumentModel validationWf = getValidationWorkflowModel();
-        return startWorkflow(validationWf, "toutatice.label.validation.wf.started");
+        res = startWorkflow(validationWf, "toutatice.label.validation.wf.started");
+        
+        // Notifications
+        notifyTaskActors(this.navigationContext.getCurrentDocument(), ToutaticeRPConstants.CST_WORKFLOW_TASK_VALIDATION_VALIDATE, ToutaticeRPConstants.CST_EVENT_VALIDATION_TASK_ASSIGNED);
+        
+        return res;
     }
 
     private DocumentModel getValidationWorkflowModel() throws ClientException {
@@ -65,7 +72,7 @@ public class ToutaticeRPDocumentRoutingActionsBean extends ToutaticeDocumentRout
     }
 
     public String cancelValidationWorkflow() throws ClientException {
-        return super.cancelWorkflow(ToutaticeRPConstants.CST_WORKFLOW_VALIDATION);
+        return super.cancelWorkflow(ToutaticeRPConstants.CST_WORKFLOW_VALIDATION, ToutaticeRPConstants.CST_EVENT_VALIDATION_TASK_CANCELED);
     }
 
     public boolean isCancelValidationActionAuthorized() throws ClientException {
