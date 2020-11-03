@@ -7,7 +7,6 @@ Bundle-Category: stateful
 Nuxeo-Component: OSGI-INF/extensions/toutatice-publisher-task-contrib.xml,
  OSGI-INF/extensions/toutatice-operations-contrib.xml,
  OSGI-INF/extensions/toutatice-eventlistener-contrib.xml,
- OSGI-INF/extensions/toutatice-notifications-contrib.xml,
  OSGI-INF/extensions/toutatice-publisher-finder-contrib.xml,
  OSGI-INF/extensions/toutatice-remote-publishing-audit-contrib.xml,
  OSGI-INF/extensions/validation/toutatice-actions-contrib.xml,
