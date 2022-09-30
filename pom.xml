@@ -8,11 +8,11 @@
 	<packaging>pom</packaging>
 	<description>Addon to leverage the collaboration tools</description>
 	<name>opentoutatice-remote-publishing-parent</name>
-	<version>RAB-4.7.33-RC01-SNAPSHOT</version>
+	<version>RAB-4.7.32</version>
 
 	<properties>
 		<nuxeo.version>RAB-6.1.5</nuxeo.version>
-		<opentoutatice.platform.version>RAB-4.7.44</opentoutatice.platform.version>
+		<opentoutatice.platform.version>RAB-4.7.45</opentoutatice.platform.version>
 	</properties>
 
 	<modules>
